@@ -8,6 +8,6 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './user.component.html',
   styles: ``
 })
-export class UserComponent {
+export default class UserComponent {
 
 }
