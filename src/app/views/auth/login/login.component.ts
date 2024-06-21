@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
   standalone: true,
@@ -9,6 +10,17 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './login.component.html',
   styles: ``
 })
-export default class LoginComponent {
+export default class LoginComponent implements OnInit {
+
+  loginForm!: FormGroup;
+
+  router=inject(Router);
+  authService=inject(AuthService);
+  fb=inject(FormBuilder);
+
+
+  ngOnInit(): void {
+    
+  }
 
 }
