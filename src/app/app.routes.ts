@@ -1,4 +1,3 @@
-import { Title } from '@angular/platform-browser';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -23,7 +22,7 @@ export const routes: Routes = [
         loadComponent: () => import('./layouts/user/user.component'),
         children:[
           {
-            path: 'almacen',
+            path: 'almacenes',
             title: 'Almacenes',
             loadComponent: () => import('./views/user/almacenes/almacenes.component')
           },

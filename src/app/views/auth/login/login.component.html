@@ -18,13 +18,13 @@
       </h2>
     </header>
     <!-- END Header -->
-  
+
     <!-- Sign In Form -->
     <div
       class="flex flex-col overflow-hidden rounded-lg bg-white shadow-sm dark:bg-gray-800 dark:text-gray-100"
     >
       <div class="grow p-5 md:px-16 md:py-12">
-        <form >
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
           <div class="space-y-1">
             <label for="usuario" class="text-sm font-medium">Usuario</label>
             <input
@@ -35,7 +35,10 @@
               placeholder="Ingrese su Usuario."
               autocomplete="off"
               class="block w-full rounded-lg border border-gray-200 px-5 py-3 leading-6 placeholder-gray-500 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:placeholder-gray-400 dark:focus:border-blue-500"
-            /> 
+              [ngClass]="{ 'border-red-500': submitted && loginForm.get('usuario')?.invalid }"/>
+            <div *ngIf="submitted && loginForm.get('usuario')?.invalid" class="text-red-500 text-xs">
+              Usuario es requerido.
+            </div>
         </div>
           <div class="space-y-1">
             <label for="password" class="text-sm font-medium"
@@ -49,11 +52,11 @@
               placeholder="Ingrese su contraseña."
               autocomplete="off"
               class="block w-full rounded-lg border border-gray-200 px-5 py-3 leading-6 placeholder-gray-500 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:placeholder-gray-400 dark:focus:border-blue-500"
-              />
+              [ngClass]="{ 'border-red-500': submitted && loginForm.get('usuario')?.invalid }"/>
             </div>
-            <div>
-                .
-            </div>
+          <div *ngIf="submitted && loginForm.get('usuario')?.invalid" class="text-red-500 text-xs">
+            Usuario es requerido.
+          </div>
           <div>
             <button
               type="submit"
@@ -74,7 +77,7 @@
               </svg>
               <span>Iniciar sesión</span>
             </button>
-  
+
             <!-- Divider: With Label -->
             <div class="my-5 flex items-center">
               <span
@@ -98,5 +101,4 @@
   </section>
   </div>
 
-  </main>
-  
+</main>
