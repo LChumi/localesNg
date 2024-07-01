@@ -9,7 +9,7 @@ import { Bodega } from '../models/bodega';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private base_url = environment.apiUrlBase+'usuario/'
+  private base_url = environment.apiUrlBase+'usuarios/'
 
   http=inject(HttpClient);
 
@@ -35,7 +35,7 @@ export class UsuarioService {
     return this.http.delete<Usuario>(`${this.base_url}eliminar/${id}`)
   }
 
-  listaBodegas(usuarioId:number):Observable<Bodega[]>{
+  listaBodegas(usuarioId:string):Observable<Bodega[]>{
     return this.http.get<Bodega[]>(`${this.base_url}listaBodegas/${usuarioId}`)
   }
 

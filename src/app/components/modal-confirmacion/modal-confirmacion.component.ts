@@ -9,7 +9,7 @@ import { Component, input, output } from '@angular/core';
 })
 export class ModalConfirmacionComponent {
 
-  public storeSelected=input.required<string>();
+  storeSelected=input<string>();
   public modalCerrado=output<void>();
 
   opcionSelected!: string;

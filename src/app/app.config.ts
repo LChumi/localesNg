@@ -12,7 +12,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideToastr({ timeOut: 900, preventDuplicates: true}),
     provideRouter(routes,withViewTransitions()),
-    provideClientHydration(),
     provideHttpClient(withFetch(), withInterceptors([errorResponseInterceptor]))
   ]
 };

@@ -41,6 +41,7 @@ export default class LoginComponent implements OnInit {
 
     this.authService.login(loginData).subscribe(
       user => {
+        sessionStorage.setItem("username",user.username)
         this.goToAlmacen()
       }
     )
