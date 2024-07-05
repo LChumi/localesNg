@@ -12,7 +12,7 @@ import { ProductoService } from '../../../core/services/producto.service';
   styles: ``
 })
 export default class ProductosComponent {
-  producto!: Producto;
+  producto?: Producto;
   cantidad: number = 0;
   proveedor: string = '';
   mostrarModal: boolean = false;
@@ -31,12 +31,17 @@ name: any;
       producto => {
         this.producto = producto
         console.log(producto)
+      },
+      error => {
+        console.error(error)
+        alert('Producto no encontrado')
+        this.producto = undefined
       }
     )
   }
 
-  buscarProductoPorCodigo(codigo: string): void {
-    this.productoService.porBarra(codigo).subscribe(
+  buscarProductoPorCodigo(): void {
+    this.productoService.porBarra(this.barra).subscribe(
       producto => {
         this.producto=producto
       }
