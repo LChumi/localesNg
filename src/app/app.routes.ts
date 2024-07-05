@@ -26,6 +26,11 @@ export const routes: Routes = [
             title: 'Almacenes',
             loadComponent: () => import('./views/user/almacenes/almacenes.component')
           },
+          {
+            path: 'productos',
+            title: 'Productos',
+            loadComponent: () => import('./views/user/productos/productos.component')
+          },
           {path: '',redirectTo: 'almacenes',pathMatch: 'full'},
           {path: '**',redirectTo: 'almacenes',pathMatch: 'full'}
         ]

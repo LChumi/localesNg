@@ -1,0 +1,92 @@
+<section class="dark:bg-gray-700 bg-white py-16">
+    <div class="container mx-auto px-4">
+      <div class="border-blue-600 border-l-4 pl-5">
+        <h2 class="text-2xl font-semibold text-black dark:text-white mb-2">
+          Productos
+        </h2>
+        <p class="text-sm font-medium text-black dark:text-gray-400">
+          Ingreso de Productos
+        </p>
+      </div>
+  
+      <div class="mt-6 flex flex-wrap -mx-4">
+        <!-- Input para buscar por nombre -->
+        <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
+          <label for="nombre-producto" class="block text-base font-medium text-black dark:text-white mb-2">
+            Nombre Producto
+          </label>
+          <input 
+            type="text" 
+            id="nombre-producto" 
+            placeholder="Nombre del producto" 
+            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
+            >
+        </div>
+  
+        <!-- Input para buscar por código de barras -->
+        <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
+          <label for="codigo-barras" class="block text-base font-medium text-black dark:text-white mb-2">
+            Código de Barras
+          </label>
+          <input 
+            type="text" 
+            id="codigo-barras" 
+            placeholder="Código de barras" 
+            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
+            >
+        </div>
+      </div>
+  
+      <div *ngIf="producto">
+        <!-- Mostrar información del producto -->
+        <div class="mt-6">
+          <p class="text-lg text-black dark:text-white">Nombre: {{ producto.nombre }}</p>
+          <p class="text-lg text-black dark:text-white">Descripción: {{ producto.descripcion }}</p>
+          <p class="text-lg text-black dark:text-white">Código de Barras: {{ producto.codigoBarras }}</p>
+          <p class="text-lg text-black dark:text-white">Precio: {{ producto.precio }}</p>
+        </div>
+  
+        <!-- Input para cantidad -->
+        <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
+          <label for="cantidad" class="block text-base font-medium text-black dark:text-white mb-2">
+            Cantidad
+          </label>
+          <input 
+            type="number" 
+            id="cantidad" 
+            placeholder="Cantidad" 
+            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
+           >
+        </div>
+  
+        <!-- Input para proveedor -->
+        <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
+          <label for="proveedor" class="block text-base font-medium text-black dark:text-white mb-2">
+            Proveedor
+          </label>
+          <input 
+            type="text" 
+            id="proveedor" 
+            placeholder="Proveedor" 
+            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
+           >
+        </div>
+  
+        <button (click)="agregarProducto()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md">
+          Agregar Producto
+        </button>
+      </div>
+  
+      <!-- Modal para agregar nuevo producto -->
+      <div *ngIf="mostrarModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+        <div class="bg-white p-8 rounded-md dark:bg-gray-700">
+          <h3 class="text-xl mb-4 text-black dark:text-white">Agregar Nuevo Producto</h3>
+          <!-- Aquí puedes agregar el formulario para agregar un nuevo producto -->
+          <button (click)="cerrarModal()" class="mt-4 bg-red-600 text-white py-2 px-4 rounded-md">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
