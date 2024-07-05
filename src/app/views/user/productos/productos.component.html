@@ -19,6 +19,8 @@
             type="text" 
             id="nombre-producto" 
             placeholder="Nombre del producto" 
+            [(ngModel)]="nombre"
+            (keyup.enter)="buscarProductoPorNombre()"
             class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
             >
         </div>
@@ -37,45 +39,45 @@
         </div>
       </div>
   
-      <div *ngIf="producto">
-        <!-- Mostrar información del producto -->
-        <div class="mt-6">
-          <p class="text-lg text-black dark:text-white">Nombre: {{ producto.nombre }}</p>
-          <p class="text-lg text-black dark:text-white">Descripción: {{ producto.descripcion }}</p>
-          <p class="text-lg text-black dark:text-white">Código de Barras: {{ producto.codigoBarras }}</p>
-          <p class="text-lg text-black dark:text-white">Precio: {{ producto.precio }}</p>
-        </div>
-  
-        <!-- Input para cantidad -->
-        <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
-          <label for="cantidad" class="block text-base font-medium text-black dark:text-white mb-2">
-            Cantidad
-          </label>
-          <input 
-            type="number" 
-            id="cantidad" 
-            placeholder="Cantidad" 
-            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
-           >
-        </div>
-  
-        <!-- Input para proveedor -->
-        <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
-          <label for="proveedor" class="block text-base font-medium text-black dark:text-white mb-2">
-            Proveedor
-          </label>
-          <input 
-            type="text" 
-            id="proveedor" 
-            placeholder="Proveedor" 
-            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
-           >
-        </div>
-  
-        <button (click)="agregarProducto()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md">
-          Agregar Producto
-        </button>
-      </div>
+      @if(producto) {
+         <!-- Mostrar información del producto -->
+         <div class="mt-6">
+            <p class="text-lg text-black dark:text-white">Nombre: {{ producto.costo }}</p>
+            <p class="text-lg text-black dark:text-white">Descripción: {{ producto.descripcion }}</p>
+            <p class="text-lg text-black dark:text-white">Código de Barras: {{ producto.descripcion }}</p>
+            <p class="text-lg text-black dark:text-white">Precio: {{ producto.costo }}</p>
+          </div>
+    
+          <!-- Input para cantidad -->
+          <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
+            <label for="cantidad" class="block text-base font-medium text-black dark:text-white mb-2">
+              Cantidad
+            </label>
+            <input 
+              type="number" 
+              id="cantidad" 
+              placeholder="Cantidad" 
+              class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
+             >
+          </div>
+    
+          <!-- Input para proveedor -->
+          <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-6">
+            <label for="proveedor" class="block text-base font-medium text-black dark:text-white mb-2">
+              Proveedor
+            </label>
+            <input 
+              type="text" 
+              id="proveedor" 
+              placeholder="Proveedor" 
+              class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-black dark:focus:border-white"
+             >
+          </div>
+    
+          <button (click)="agregarProducto()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md">
+            Agregar Producto
+          </button>
+      }
   
       <!-- Modal para agregar nuevo producto -->
       <div *ngIf="mostrarModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
