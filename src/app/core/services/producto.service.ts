@@ -33,4 +33,12 @@ export class ProductoService {
   eliminar(id:number):Observable<Producto>{
     return this.http.delete<Producto>(`${this.base_url}eliminar/${id}`)
   }
+
+  porNombre(nombre:string):Observable<Producto>{
+    return this.http.get<Producto>(`${this.base_url}porNombre/${nombre}`)
+  }
+
+  porBarra(barra:string):Observable<Producto>{
+    return this.http.get<Producto>(`${this.base_url}porBarra/${barra}`)
+  }
 }
