@@ -22,7 +22,7 @@ export default class ProductosComponent {
 
   http = inject(HttpClient)
   productoService = inject(ProductoService)
-name: any;
+  name: any;
 
   constructor() {}
 
@@ -49,7 +49,7 @@ name: any;
   }
 
   agregarProducto(): void {
-    
+
   }
 
   cerrarModal(): void {

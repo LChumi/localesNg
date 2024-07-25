@@ -43,6 +43,9 @@ export default class LoginComponent implements OnInit {
       user => {
         sessionStorage.setItem("username",user.username)
         this.goToAlmacen()
+      },
+      error => {
+        this.loginForm.reset()
       }
     )
   }

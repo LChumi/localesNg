@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import {Component, inject, input, output} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector : 'app-modal',
@@ -13,6 +14,7 @@ export class ModalConfirmacionComponent {
   public modalCerrado=output<void>();
 
   opcionSelected!: string;
+  router =inject(Router)
 
   constructor(){
     this.opcionSelected='';
@@ -23,6 +25,7 @@ export class ModalConfirmacionComponent {
       console.log('Seleccionaste ventas');
     } else if (this.opcionSelected === 'ingreso-productos'){
       console.log('selecccionaste ingreso de productos ');
+      this.router.navigate(["/bar/user/productos"])
     }
     this.cerrarModal()
   }
