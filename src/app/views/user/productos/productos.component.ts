@@ -21,7 +21,7 @@ export default class ProductosComponent implements OnInit{
   cantidad:     number = 0;
   barra:        string =''
   nombre:       string=''
-  titulo:       string='Producto no encontrado'
+  titulo:       string='Producto no encontrado desea agregarlo'
 
   mostrarModal:      boolean = false;
   modalConfirmacion: boolean = false;
@@ -82,7 +82,8 @@ export default class ProductosComponent implements OnInit{
   respuestaConfirmacion(confirmado: boolean){
     this.mostrarModal= false;
     if (confirmado){
-      console.log('Si')
+      this.mostrarModal=true;
+      this.modalConfirmacion=false;
     } else {
       this.modalConfirmacion=false;
     }
