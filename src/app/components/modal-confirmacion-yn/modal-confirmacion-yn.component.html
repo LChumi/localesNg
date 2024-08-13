@@ -1,0 +1,17 @@
+<div class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="absolute inset-0 bg-black opacity-50"></div>
+    <div class="bg-white p-6 rounded-lg shadow-lg z-10">
+      <button (click)="cerrarModal(false)" class="flex top-2 right-2 text-gray-600 hover:text-gray-800">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <p class="mb-4">{{titulo()}}</p>
+
+      <div class="flex gap-4">
+        <button (click)="optionSelected = 'Si'; confirmarOpcion();" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Si</button>
+        <button (click)="optionSelected = 'No'; confirmarOpcion();" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">No</button>
+      </div>
+    </div>
+</div>
