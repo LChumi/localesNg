@@ -15,7 +15,7 @@ export default class AlmacenesComponent implements OnInit{
   userService = inject(UsuarioService)
 
   listaBodegas: Bodega[]=[]
-  
+
   modalVisible =      false;
   bodegaSelecionada!: string;
 
@@ -23,8 +23,9 @@ export default class AlmacenesComponent implements OnInit{
       this.cargarBodegas()
   }
 
-  mostrarModal(bodega: string){
-    this.bodegaSelecionada = bodega;
+  mostrarModal(bodega: Bodega){
+    this.bodegaSelecionada = bodega.nombre;
+    sessionStorage.setItem('bodegaId',String(bodega.id))
     this.modalVisible= true
   }
 
@@ -36,7 +37,7 @@ export default class AlmacenesComponent implements OnInit{
         bodegas => {
           this.listaBodegas = bodegas
           console.log(bodegas);
-          
+
         }
       )
     }

@@ -5,7 +5,7 @@
   <div class="max-w-screen-md mx-auto">
     <div class="grid grid-cols-3 gap-6">
       @for (bodega of listaBodegas; track bodega.id) {
-        <div class="group pb-24 relative overflow-hidden" (click)="mostrarModal('Bodega 1')">
+        <div class="group pb-24 relative overflow-hidden" (click)="mostrarModal(bodega)">
           <div class="group-hover:translate-y-0 transition-all duration-700 translate-y-full top-0 right-0 bottom-24 left-0 absolute bg-gradient-to-b from-transparent to-orange-600 z-10"></div>
           <img src="assets/images/bar.jpeg" class="transition-all group-hover:scale-125 duration-700 mr-4 h-60 w-auto" alt="" />
           <div class="bg-orange-600 absolute z-10 bottom-0 left-0 w-full h-24 flex flex-col justify-center items-center">
@@ -24,7 +24,7 @@
       }
     </div>
   </div>
-  
+
 
 </div>
 @if (modalVisible) {
