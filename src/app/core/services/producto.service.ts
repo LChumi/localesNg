@@ -41,4 +41,8 @@ export class ProductoService {
   porBarra(barra:string):Observable<Producto>{
     return this.http.get<Producto>(`${this.base_url}porBarra/${barra}`)
   }
+
+  porNombreOBarra(data:string):Observable<Producto[]>{
+    return this.http.get<Producto[]>(`${this.base_url}barra-desc/${data}`)
+  }
 }

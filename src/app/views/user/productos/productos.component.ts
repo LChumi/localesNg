@@ -23,18 +23,19 @@ export default class ProductosComponent implements OnInit{
   proveedorService =  inject(ProveedorService)
   bodegaService=      inject(BodegaService);
 
-  producto?:        Producto;
+  productoSelected?:        Producto;
   bodega?:          Bodega;
   listaProveedores: Proveedor[] =[];
+  listaProductos:   Producto[] =[];
 
   cantidad:     number = 0;
-  barra:        string =''
-  nombre:       string=''
+  nombreOBara:       string=''
   titulo:       string='Producto no encontrado desea agregarlo'
   nombreBodega?: string
 
-  mostrarModal:      boolean = false;
-  modalConfirmacion: boolean = false;
+  mostrarModal:        boolean = false;
+  modalConfirmacion:   boolean = false;
+  modalListaProductos: boolean = false
 
   constructor() {}
 
@@ -43,26 +44,18 @@ export default class ProductosComponent implements OnInit{
     this.bodegaSelected()
   }
 
-  buscarProductoPorNombre(): void {
-    this.productoService.porNombre(this.nombre).subscribe(
-      producto => {
-        this.producto = producto
+  buscarPorNombreOBarra(): void {
+    this.productoService.porNombreOBarra(this.nombreOBara).subscribe(
+      productos => {
+        this.listaProductos = productos
+        if (productos.length > 0){
+          this.modalListaProductos=true;
+        }else{
+          this.modalConfirmacion=true
+        }
       },
       error => {
         this.modalConfirmacion=true
-        this.producto = undefined
-      }
-    )
-  }
-
-  buscarProductoPorCodigo(): void {
-    this.productoService.porBarra(this.barra).subscribe(
-      producto => {
-        this.producto=producto
-      },
-      error => {
-        this.modalConfirmacion=true
-        this.producto = undefined
       }
     )
   }
@@ -115,4 +108,8 @@ export default class ProductosComponent implements OnInit{
     }
   }
 
+  productoEscogido(producto:Producto){
+    this.productoSelected=producto
+    this.modalListaProductos=false
+  }
 }
