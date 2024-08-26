@@ -9,6 +9,7 @@ import {ProveedorService} from "../../../core/services/proveedor.service";
 import {ModalConfirmacionYnComponent} from "../../../components/modal-confirmacion-yn/modal-confirmacion-yn.component";
 import {BodegaService} from "../../../core/services/bodega.service";
 import {Bodega} from "../../../core/models/bodega";
+import {EntradaInventarioService} from "../../../core/services/entrada-inventario.service";
 
 @Component({
   standalone: true,
@@ -22,15 +23,16 @@ export default class ProductosComponent implements OnInit{
   productoService =   inject(ProductoService)
   proveedorService =  inject(ProveedorService)
   bodegaService=      inject(BodegaService);
+  inventarioService=  inject(EntradaInventarioService);
 
-  productoSelected?:        Producto;
+  productoSelected?:Producto;
   bodega?:          Bodega;
   listaProveedores: Proveedor[] =[];
   listaProductos:   Producto[] =[];
 
-  cantidad:     number = 0;
-  nombreOBara:       string=''
-  titulo:       string='Producto no encontrado desea agregarlo'
+  cantidad:      number = 0;
+  nombreOBara:   string=''
+  titulo:        string='Producto no encontrado desea agregarlo'
   nombreBodega?: string
 
   mostrarModal:        boolean = false;
@@ -60,7 +62,24 @@ export default class ProductosComponent implements OnInit{
     )
   }
 
-  agregarProducto(): void {
+  agregarStockProducto(){
+    const bodId = this.bodega?.id;
+    const productosId = this.productoSelected?.id;
+    if (bodId && productosId){
+      this.inventarioService.incrementarStock(productosId,bodId,this.cantidad,1).subscribe({
+        next: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      })
+    }
+
+  }
+
+  agregarProductoNuevo(){
+
   }
 
   cerrarModal(): void {

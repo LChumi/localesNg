@@ -18,8 +18,8 @@ export class EntradaInventarioService {
     return this.http.post<any>(`${this.base_url}`,entradaInventario)
   }
 
-  incrementarStock(productoId:number,bodegaId:number,cantidad:number):Observable<any>{
-    return this.http.get<any>(`${this.base_url}incrementar-stock/${productoId}/${bodegaId}/${cantidad}`)
+  incrementarStock(productoId:number,bodegaId:number,cantidad:number, usuarioId:number):Observable<any>{
+    return this.http.get<any>(`${this.base_url}incrementar-stock/${productoId}/${bodegaId}/${cantidad}/{usuarioId}`)
   }
 
   reducirStock(productoId:number,bodegaId:number,cantidad:number):Observable<any>{

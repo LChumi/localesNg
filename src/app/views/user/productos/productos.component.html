@@ -85,25 +85,6 @@
         >
       </div>
 
-
-
-      <!-- Input para proveedor -->
-        <div class="mb-4">
-          <label for="proveedor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Proveedores
-          </label>
-          <select
-            id="proveedor"
-            name="proveedor"
-            required
-            class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-          >
-            @for (proveedor of listaProveedores; track proveedor.id){
-              <option [ngValue]="proveedor">{{proveedor.nombre}}</option>
-            }
-          </select>
-        </div>
-
         <!-- Input para Bodega  -->
         <div class="mb-4">
           <label for="bodega" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
@@ -119,7 +100,7 @@
           >
         </div>
 
-        <button (click)="agregarProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
+        <button (click)="agregarStockProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
           Agregar Producto
         </button>
       </div>
@@ -197,6 +178,22 @@
                   step="0.01"
                   min="0"
                 >
+              </div>
+              <!-- Input para proveedor -->
+              <div class="col-span-1">
+                <label for="proveedor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Proveedores
+                </label>
+                <select
+                  id="proveedor"
+                  name="proveedor"
+                  required
+                  class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+                >
+                  @for (proveedor of listaProveedores; track proveedor.id){
+                    <option [ngValue]="proveedor">{{proveedor.nombre}}</option>
+                  }
+                </select>
               </div>
             </div>
             <div class="flex gap-4">
