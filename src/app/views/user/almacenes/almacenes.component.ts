@@ -21,6 +21,7 @@ export default class AlmacenesComponent implements OnInit{
 
   ngOnInit(): void {
       this.cargarBodegas()
+      this.obtenerIdUsario()
   }
 
   mostrarModal(bodega: Bodega){
@@ -40,6 +41,17 @@ export default class AlmacenesComponent implements OnInit{
 
         }
       )
+    }
+  }
+
+  obtenerIdUsario(){
+    const username = sessionStorage.getItem("username");
+    if (username){
+      this.userService.porUsername(username).subscribe({
+        next: (user) => {
+          sessionStorage.setItem("userId",String(user.id))
+        }
+      })
     }
   }
 

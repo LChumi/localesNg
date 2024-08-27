@@ -10,6 +10,8 @@ import {ModalConfirmacionYnComponent} from "../../../components/modal-confirmaci
 import {BodegaService} from "../../../core/services/bodega.service";
 import {Bodega} from "../../../core/models/bodega";
 import {EntradaInventarioService} from "../../../core/services/entrada-inventario.service";
+import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
 
 @Component({
   standalone: true,
@@ -19,11 +21,12 @@ import {EntradaInventarioService} from "../../../core/services/entrada-inventari
 })
 export default class ProductosComponent implements OnInit{
 
-  http =              inject(HttpClient)
   productoService =   inject(ProductoService)
   proveedorService =  inject(ProveedorService)
   bodegaService=      inject(BodegaService);
   inventarioService=  inject(EntradaInventarioService);
+  toastr=             inject(ToastrService)
+  router=              inject(Router)
 
   productoSelected?:Producto;
   bodega?:          Bodega;
@@ -31,13 +34,14 @@ export default class ProductosComponent implements OnInit{
   listaProductos:   Producto[] =[];
 
   cantidad:      number = 0;
-  nombreOBara:   string=''
+  nombreOBarra:   string=''
   titulo:        string='Producto no encontrado desea agregarlo'
   nombreBodega?: string
 
   mostrarModal:        boolean = false;
   modalConfirmacion:   boolean = false;
-  modalListaProductos: boolean = false
+  modalListaProductos: boolean = false;
+  modalProductoSelct:  boolean = false;
 
   constructor() {}
 
@@ -47,17 +51,20 @@ export default class ProductosComponent implements OnInit{
   }
 
   buscarPorNombreOBarra(): void {
-    this.productoService.porNombreOBarra(this.nombreOBara).subscribe(
+    this.productoService.porNombreOBarra(this.nombreOBarra).subscribe(
       productos => {
         this.listaProductos = productos
         if (productos.length > 0){
           this.modalListaProductos=true;
+          this.cleanInputs()
         }else{
           this.modalConfirmacion=true
+          this.cleanInputs()
         }
       },
       error => {
         this.modalConfirmacion=true
+        this.cleanInputs()
       }
     )
   }
@@ -65,13 +72,18 @@ export default class ProductosComponent implements OnInit{
   agregarStockProducto(){
     const bodId = this.bodega?.id;
     const productosId = this.productoSelected?.id;
-    if (bodId && productosId){
-      this.inventarioService.incrementarStock(productosId,bodId,this.cantidad,1).subscribe({
+    const  userId = Number(sessionStorage.getItem('userId'));
+    if (bodId && productosId && userId){
+      console.log(bodId, productosId, this.cantidad, userId)
+      this.inventarioService.incrementarStock(productosId,bodId,this.cantidad,userId).subscribe({
         next: (data) => {
-          console.log(data);
+          this.cleanInputs();
+          this.toastr.success(data)
+          this.cerrarProductoSelct()
         },
-        error: (error) => {
-          console.log(error);
+        error: (err) => {
+          console.error('Error ',err);
+          this.cleanInputs();
         }
       })
     }
@@ -80,10 +92,6 @@ export default class ProductosComponent implements OnInit{
 
   agregarProductoNuevo(){
 
-  }
-
-  cerrarModal(): void {
-    this.mostrarModal = false;
   }
 
   listarProveedores(){
@@ -127,8 +135,38 @@ export default class ProductosComponent implements OnInit{
     }
   }
 
+  formatInputNumber() {
+    if (this.cantidad !== null && this.cantidad !== undefined) {
+      // Asegúrate de que sea un entero
+      this.cantidad = Math.floor(Number(this.cantidad));
+      console.log(this.cantidad);
+    }
+  }
+
+  cleanInputs(){
+    this.cantidad=0;
+    this.nombreOBarra=''
+  }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
+  }
+
+  cerrarProductoSelct(){
+    this.modalProductoSelct=false
+    this.productoSelected=undefined;
+  }
+
   productoEscogido(producto:Producto){
+    this.modalProductoSelct=true
     this.productoSelected=producto
     this.modalListaProductos=false
+  }
+
+  goToAlmacen(){
+    this.router.navigate(['/bar', 'user', 'almacenes']).then(r =>{
+      this.cleanInputs()
+      this.productoSelected=undefined;
+    })
   }
 }

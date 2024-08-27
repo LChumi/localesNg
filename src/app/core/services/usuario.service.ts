@@ -23,6 +23,10 @@ export class UsuarioService {
     return this.http.get<Usuario>(`${this.base_url}porId/${id}`)
   }
 
+  porUsername(username:string):Observable<Usuario>{
+    return this.http.get<Usuario>(`${this.base_url}porUsername/${username}`)
+  }
+
   listar():Observable<Usuario[]>{
     return this.http.get<Usuario[]>(`${this.base_url}listar`)
   }
