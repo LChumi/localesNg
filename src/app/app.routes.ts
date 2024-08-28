@@ -31,6 +31,12 @@ export const routes: Routes = [
             title: 'Productos',
             loadComponent: () => import('./views/user/productos/productos.component')
           },
+          {
+            path: 'facturacion',
+            title: 'Facturacion',
+            loadComponent: () => import('./views/user/facturacion/facturacion.component')
+
+          },
           {path: '',redirectTo: 'almacenes',pathMatch: 'full'},
           {path: '**',redirectTo: 'almacenes',pathMatch: 'full'}
         ]

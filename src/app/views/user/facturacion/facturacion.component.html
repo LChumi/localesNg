@@ -1,0 +1,97 @@
+<section class="bg-gray-100 p-6">
+<!-- Cabecera -->
+  <div class="flex justify-between items-center bg-gray-200 p-4 rounded-lg mt-6">
+    <button class="bg-red-600 text-white px-6 py-3 rounded-full text-xl font-bold">
+      RETURN
+    </button>
+    <div class="text-right">
+      <p class="text-gray-700 text-lg">Total</p>
+      <p class="text-4xl font-bold text-red-600">0,00 Br</p>
+    </div>
+  </div>
+<div class="bg-white p-4 rounded-lg shadow-md mb-6">
+  <div class="flex justify-between items-center mb-4">
+    <!-- Nombre de la Empresa/Bodega -->
+    <div class="text-center">
+      <h1 class="text-xl font-bold">Nombre de la Empresa</h1>
+      <p class="text-gray-600">Nombre del Usuario</p>
+    </div>
+
+    <!-- Valor Total -->
+    <div class="text-right">
+      <p class="text-lg font-semibold">Cambio:</p>
+      <p class="text-xl font-bold text-green-500">$0.00</p>
+    </div>
+  </div>
+
+  <!-- Información del Cliente -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block text-gray-700">Vendedor:</label>
+      <input type="text" readonly value="Nombre del Vendedor" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg">
+    </div>
+    <div>
+      <label class="block text-gray-700">CI/RUC:</label>
+      <input type="text" value="000000000" class="w-full border border-gray-300 p-2 rounded-lg">
+    </div>
+    <div>
+      <label class="block text-gray-700">Cliente:</label>
+      <input type="text" readonly value="Nombre del Cliente" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg">
+    </div>
+    <div>
+      <label class="block text-gray-700">Dirección:</label>
+      <input type="text" value="Dirección del Cliente" class="w-full border border-gray-300 p-2 rounded-lg">
+    </div>
+    <div>
+      <label class="block text-gray-700">Saldo:</label>
+      <input type="text" value="$0.00" class="w-full border border-gray-300 p-2 rounded-lg">
+    </div>
+    <div>
+      <label class="block text-gray-700">Cupo:</label>
+      <input type="text" value="$0.00" class="w-full border border-gray-300 p-2 rounded-lg">
+    </div>
+  </div>
+</div>
+
+<!-- Detalle -->
+<div class="bg-white p-4 rounded-lg shadow-md mb-6">
+  <div class="mb-4">
+    <label class="block text-gray-700">Producto:</label>
+    <input type="text" placeholder="Buscar por barra o nombre" class="w-full border border-gray-300 p-2 rounded-lg">
+  </div>
+
+  <div class="bg-gray-50 border border-gray-300 rounded-lg overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 text-left">Código</th>
+        <th class="p-2 text-left">Nombre</th>
+        <th class="p-2 text-left">Cantidad</th>
+        <th class="p-2 text-left">Precio</th>
+        <th class="p-2 text-left">Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Aquí van las filas de productos -->
+      <tr>
+        <td class="p-2">001</td>
+        <td class="p-2">Producto Ejemplo</td>
+        <td class="p-2">1</td>
+        <td class="p-2">$10.00</td>
+        <td class="p-2">$10.00</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Forma de Pago -->
+<div class="bg-white p-4 rounded-lg shadow-md">
+  <label class="block text-gray-700">Forma de Pago:</label>
+  <select class="w-full border border-gray-300 p-2 rounded-lg">
+    <option value="efectivo">Efectivo</option>
+    <option value="tarjeta">Tarjeta</option>
+    <option value="credito">Crédito</option>
+  </select>
+</div>
+</section>
