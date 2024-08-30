@@ -23,9 +23,10 @@ export class ModalConfirmacionComponent {
   confirmarOpcion(){
     if(this.opcionSelected ==='ventas'){
       console.log('Seleccionaste ventas');
+      this.router.navigate(["/bar/user/facturacion"]).then(r => {console.log('Venta')} )
     } else if (this.opcionSelected === 'ingreso-productos'){
       console.log('selecccionaste ingreso de productos ');
-      this.router.navigate(["/bar/user/productos"])
+      this.router.navigate(["/bar/user/productos"]).then(r => {} )
     }
     this.cerrarModal()
   }
