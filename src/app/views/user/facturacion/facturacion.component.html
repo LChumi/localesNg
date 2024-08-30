@@ -1,7 +1,7 @@
 <section class="bg-gray-100 p-6">
 <!-- Cabecera -->
   <div class="flex justify-between items-center bg-gray-200 p-4 rounded-lg mt-6">
-    <button class="bg-red-600 text-white px-6 py-3 rounded-full text-xl font-bold">
+    <button (click)="goToAlmacen()" class="bg-red-600 text-white px-6 py-3 rounded-full text-xl font-bold">
       RETURN
     </button>
     <div class="text-right">
@@ -13,8 +13,8 @@
   <div class="flex justify-between items-center mb-4">
     <!-- Nombre de la Empresa/Bodega -->
     <div class="text-center">
-      <h1 class="text-xl font-bold">Nombre de la Empresa</h1>
-      <p class="text-gray-600">Nombre del Usuario</p>
+      <h1 class="text-xl font-bold">{{almacenName}}</h1>
+      <p class="text-gray-600">{{username}}</p>
     </div>
 
     <!-- Valor Total -->
@@ -27,10 +27,6 @@
   <!-- Información del Cliente -->
   <div class="grid grid-cols-2 gap-4">
     <div>
-      <label class="block text-gray-700">Vendedor:</label>
-      <input type="text" readonly value="Nombre del Vendedor" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg">
-    </div>
-    <div>
       <label class="block text-gray-700">CI/RUC:</label>
       <input type="text" value="000000000" class="w-full border border-gray-300 p-2 rounded-lg">
     </div>
@@ -41,6 +37,10 @@
     <div>
       <label class="block text-gray-700">Dirección:</label>
       <input type="text" value="Dirección del Cliente" class="w-full border border-gray-300 p-2 rounded-lg">
+    </div>
+    <div>
+      <label class="block text-gray-700">Vendedor:</label>
+      <input type="text" readonly [(ngModel)]="nombreUsuario" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg">
     </div>
     <div>
       <label class="block text-gray-700">Saldo:</label>

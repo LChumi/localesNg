@@ -27,6 +27,7 @@ export default class AlmacenesComponent implements OnInit{
   mostrarModal(bodega: Bodega){
     this.bodegaSelecionada = bodega.nombre;
     sessionStorage.setItem('bodegaId',String(bodega.id))
+    sessionStorage.setItem('almacen',bodega.almacen.nombre)
     this.modalVisible= true
   }
 
