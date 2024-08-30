@@ -34,6 +34,7 @@ export default class FacturacionComponent implements OnInit{
   listaProductos:Producto[]=[];
   productosSeleccionados:Producto[]=[];
 
+  modalCliente=false;
 
   almacenName = sessionStorage.getItem('almacen') ?? ''
   usuarioId = Number(sessionStorage.getItem('userId') ?? '')
@@ -81,6 +82,10 @@ export default class FacturacionComponent implements OnInit{
   }
 
   cleanInputs(){
+
+  }
+
+  cerrarModal(){
 
   }
 

@@ -94,4 +94,116 @@
     <option value="credito">Crédito</option>
   </select>
 </div>
+
+
+  @if (!modalCliente){
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+      <div class="bg-white p-8 rounded-md dark:bg-gray-700 w-full max-w-4xl">
+        <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Nuevo Producto</h3>
+        <!-- Formulario para agregar un nuevo producto -->
+        <div class="grid gap-6 mb-6 grid-cols-1 md:grid-cols-2">
+          <div>
+            <label for="nombre" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Nombre</label>
+            <input
+              type="text"
+              name="nombre"
+              id="nombre"
+              title="Nombre"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Ingrese el nombre"
+              autocomplete="off"
+            >
+          </div>
+          <div>
+            <label for="apellido" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Apellido</label>
+            <input
+              type="text"
+              name="apellido"
+              id="apellido"
+              title="Apellido"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Agregue la descripción o nombre del producto"
+              autocomplete="off"
+            >
+          </div>
+          <div class="col-span-1">
+            <label for="email" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Correo</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              title="email"
+              placeholder="Ingrese el correo"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autocomplete="off"
+            >
+          </div>
+          <div class="col-span-1">
+            <label for="telefono" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Telefono</label>
+            <input
+              type="text"
+              id="telefono"
+              name="telefono"
+              title="telefono"
+              placeholder="Ingrese el numero de telefono"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autocomplete="off"
+            >
+          </div>
+          <div class="col-span-1">
+            <label for="direccion" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Direccion</label>
+            <input
+              type="text"
+              id="direccion"
+              name="direccion"
+              title="direccion"
+              placeholder="Ingrese la direccion"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autocomplete="off"
+            >
+          </div>
+          <div class="col-span-1">
+            <label for="credito" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Credito</label>
+            <input
+              type="number"
+              id="credito"
+              placeholder="0"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autocomplete="off"
+              step="1"
+              min="0"
+            >
+          </div>
+          <div class="col-span-1">
+            <label for="cupo" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Cupo</label>
+            <input
+              type="number"
+              id="cupo"
+              placeholder="0"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autocomplete="off"
+              step="1"
+              min="0"
+            >
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <button (click)="cerrarModal()" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+            </svg>
+            Cancelar
+          </button>
+          <button type="button" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
+              <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
+            </svg>
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
 </section>
