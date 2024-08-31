@@ -11,6 +11,7 @@ import {ProductoService} from "../../../core/services/producto.service";
 import {BodegaService} from "../../../core/services/bodega.service";
 import {Observable} from "rxjs";
 import {Cliente} from "../../../core/models/cliente";
+import {VentaService} from "../../../core/services/venta.service";
 
 @Component({
   standalone: true,
@@ -26,6 +27,7 @@ export default class FacturacionComponent implements OnInit{
   clienteService =    inject(ClienteService)
   productoService =   inject(ProductoService)
   bodegaService =     inject(BodegaService)
+  ventaService =      inject(VentaService)
   toastr=             inject(ToastrService)
   router=             inject(Router)
 
@@ -154,6 +156,9 @@ export default class FacturacionComponent implements OnInit{
       formaPago: '',
       total:0
     }
+    this.ventaService.crearVenta(venta).subscribe(
+
+    )
   }
 
   cleanInputs(){
