@@ -3,7 +3,7 @@ import { Usuario } from "./ususario";
 
 export interface Venta {
     id:        number;
-    fecha:     Date;
+    fecha:     string;
     cliente:   Cliente;
     total:     number;
     formaPago: string;

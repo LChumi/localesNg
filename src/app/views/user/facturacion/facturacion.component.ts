@@ -32,8 +32,9 @@ export default class FacturacionComponent implements OnInit{
   usuario!:Usuario;
   producto!:Producto;
   venta!:Venta;
+  cliente!:Cliente;
 
-  cliente:Cliente[]=[];
+  clientes:Cliente[]=[];
   listaProductos:Producto[]=[];
   productosSeleccionados:Producto[]=[];
 
@@ -52,6 +53,7 @@ export default class FacturacionComponent implements OnInit{
   direccionCli:string='';
 
   nomCli:string=''
+  cedCli:string=''
   apellCli:string=''
   emailCli:string=''
   teleCli:string=''
@@ -88,6 +90,7 @@ export default class FacturacionComponent implements OnInit{
             return response;
           } else {
             this.llenarInfoCliente(response)
+            this.cliente=response
             return [response];
           }
         },
@@ -142,6 +145,17 @@ export default class FacturacionComponent implements OnInit{
     )
   }
 
+  crearVenta(){
+    const venta: Venta = {
+      id: 0,
+      cliente: this.cliente,
+      fecha: this.formatDate(new Date()),
+      usuario: this.usuario,
+      formaPago: '',
+      total:0
+    }
+  }
+
   cleanInputs(){
 
   }
@@ -155,6 +169,13 @@ export default class FacturacionComponent implements OnInit{
     this.saldoDisp=response.credito
     this.cupoDisp=response.cupo
     this.direccionCli=response.direccion
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
 }
