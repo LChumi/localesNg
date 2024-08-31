@@ -33,6 +33,7 @@ export default class FacturacionComponent implements OnInit{
   producto!:Producto;
   venta!:Venta;
 
+  cliente:Cliente[]=[];
   listaProductos:Producto[]=[];
   productosSeleccionados:Producto[]=[];
 
@@ -42,11 +43,20 @@ export default class FacturacionComponent implements OnInit{
   usuarioId = Number(sessionStorage.getItem('userId') ?? '')
   username = sessionStorage.getItem('username') ?? ''
 
-  cliente!: Observable<Cliente | Cliente[]>;
-
   nombreUsuario:string='';
   nombreOBarra:string='';
+  nombreCliente:string='';
   nombreOCedula:string='9999999999';
+  cupoDisp:number=0;
+  saldoDisp:number=0;
+  direccionCli:string='';
+
+  nomCli:string=''
+  apellCli:string=''
+  emailCli:string=''
+  teleCli:string=''
+  dirCli:string=''
+  creditoCli:number=0
 
   ngOnInit(): void {
     this.obtennerUsuario()
@@ -71,14 +81,13 @@ export default class FacturacionComponent implements OnInit{
     if (this.nombreOCedula) {
       this.clienteService.buscarCliente(this.nombreOCedula).subscribe({
         next: response => {
-          console.log(response)
           if (Array.isArray(response)) {
             if (response.length >= 0){
               this.modalCliente=true;
             }
             return response;
           } else {
-            // Es un único cliente
+            this.llenarInfoCliente(response)
             return [response];
           }
         },
@@ -110,12 +119,42 @@ export default class FacturacionComponent implements OnInit{
     )
   }
 
+  guardarCliente(){
+    if (!this.nomCli && !this.apellCli && !this.emailCli && !this.teleCli && !this.dirCli && !this.creditoCli){
+      this.toastr.warning("Ingrese los datos")
+      return;
+    }
+    const cliente: Cliente = {
+      id:0,
+      nombre: this.nomCli,
+      apellido: this.apellCli,
+      email: this.emailCli,
+      telefono: this.teleCli,
+      direccion: this.dirCli,
+      cupo: this.creditoCli,
+      credito: this.creditoCli,
+    }
+    this.clienteService.crear(cliente).subscribe(
+      cliente =>{
+        this.llenarInfoCliente(cliente)
+        this.modalCliente=false;
+      }
+    )
+  }
+
   cleanInputs(){
 
   }
 
   cerrarModal(){
     this.modalCliente=false
+  }
+
+  llenarInfoCliente(response:Cliente){
+    this.nombreCliente=response.nombre+ ' ' + response.apellido;
+    this.saldoDisp=response.credito
+    this.cupoDisp=response.cupo
+    this.direccionCli=response.direccion
   }
 
 }

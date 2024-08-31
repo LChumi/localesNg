@@ -35,12 +35,12 @@
              class="w-full border border-gray-300 p-2 rounded-lg">
     </div>
     <div>
-      <label class="block text-gray-700">{{cliente.}}</label>
-      <input type="text" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg" readonly>
+      <label class="block text-gray-700">Cliente:</label>
+      <input type="text" [(ngModel)]="nombreCliente" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg" readonly>
     </div>
     <div>
       <label class="block text-gray-700">Dirección:</label>
-      <input type="text" placeholder="Direccion" class="w-full border border-gray-300 p-2 rounded-lg">
+      <input type="text" placeholder="Direccion" [(ngModel)]="direccionCli" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
     </div>
     <div>
       <label class="block text-gray-700">Vendedor:</label>
@@ -48,11 +48,11 @@
     </div>
     <div>
       <label class="block text-gray-700">Saldo:</label>
-      <input type="text" placeholder="0.00" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
+      <input type="text" placeholder="0.00" [(ngModel)]="saldoDisp" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
     </div>
     <div>
       <label class="block text-gray-700">Cupo:</label>
-      <input type="text" placeholder="0.00" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
+      <input type="text" placeholder="0.00" [(ngModel)]="cupoDisp" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
     </div>
   </div>
 </div>
@@ -109,8 +109,8 @@
   @if (modalCliente){
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
       <div class="bg-white p-8 rounded-md dark:bg-gray-700 w-full max-w-4xl">
-        <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Nuevo Producto</h3>
-        <!-- Formulario para agregar un nuevo producto -->
+        <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Nuevo Cliente</h3>
+        <!-- Formulario para agregar un nuevo cliente -->
         <div class="grid gap-6 mb-6 grid-cols-1 md:grid-cols-2">
           <div>
             <label for="nombre" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Nombre</label>
@@ -118,6 +118,7 @@
               type="text"
               name="nombre"
               id="nombre"
+              [(ngModel)]="nomCli"
               title="Nombre"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Ingrese el nombre"
@@ -129,6 +130,7 @@
             <input
               type="text"
               name="apellido"
+              [(ngModel)]="apellCli"
               id="apellido"
               title="Apellido"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -142,6 +144,7 @@
               type="email"
               id="email"
               name="email"
+              [(ngModel)]="emailCli"
               title="email"
               placeholder="Ingrese el correo"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -154,6 +157,7 @@
               type="text"
               id="telefono"
               name="telefono"
+              [(ngModel)]="teleCli"
               title="telefono"
               placeholder="Ingrese el numero de telefono"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -167,6 +171,7 @@
               id="direccion"
               name="direccion"
               title="direccion"
+              [(ngModel)]="dirCli"
               placeholder="Ingrese la direccion"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               autocomplete="off"
@@ -178,18 +183,7 @@
               type="number"
               id="credito"
               placeholder="0"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              autocomplete="off"
-              step="1"
-              min="0"
-            >
-          </div>
-          <div class="col-span-1">
-            <label for="cupo" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Cupo</label>
-            <input
-              type="number"
-              id="cupo"
-              placeholder="0"
+              [(ngModel)]="creditoCli"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               autocomplete="off"
               step="1"
@@ -204,7 +198,7 @@
             </svg>
             Cancelar
           </button>
-          <button type="button" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <button (click)="guardarCliente()" type="button" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
               <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
               <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
