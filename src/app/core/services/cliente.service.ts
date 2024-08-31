@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Cliente } from '../models/cliente';
 import { Observable } from 'rxjs';
 
@@ -32,5 +32,14 @@ export class ClienteService {
 
   eliminar(id:number):Observable<Cliente>{
     return this.http.delete<Cliente>(`${this.base_url}eliminar/${id}`)
+  }
+
+  actualizarCredito(idCliente:string, monto: number):Observable<void>{
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<void>(`${this.base_url}${idCliente}/credito`, {monto}, {headers})
+  }
+
+  buscarCliente(data:string):Observable<Cliente | Cliente[]>{
+    return this.http.get<Cliente | Cliente[]>(`${this.base_url}buscar-cliente/${data}`)
   }
 }

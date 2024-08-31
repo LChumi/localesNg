@@ -9,6 +9,8 @@ import {Venta} from "../../../core/models/venta";
 import {FormsModule} from "@angular/forms";
 import {ProductoService} from "../../../core/services/producto.service";
 import {BodegaService} from "../../../core/services/bodega.service";
+import {Observable} from "rxjs";
+import {Cliente} from "../../../core/models/cliente";
 
 @Component({
   standalone: true,
@@ -40,8 +42,11 @@ export default class FacturacionComponent implements OnInit{
   usuarioId = Number(sessionStorage.getItem('userId') ?? '')
   username = sessionStorage.getItem('username') ?? ''
 
+  cliente!: Observable<Cliente | Cliente[]>;
+
   nombreUsuario:string='';
   nombreOBarra:string='';
+  nombreOCedula:string='9999999999';
 
   ngOnInit(): void {
     this.obtennerUsuario()
@@ -60,6 +65,30 @@ export default class FacturacionComponent implements OnInit{
         this.nombreUsuario=user.nombre
       }
     )
+  }
+
+  buscarCliente() {
+    if (this.nombreOCedula) {
+      this.clienteService.buscarCliente(this.nombreOCedula).subscribe({
+        next: response => {
+          console.log(response)
+          if (Array.isArray(response)) {
+            if (response.length >= 0){
+              this.modalCliente=true;
+            }
+            return response;
+          } else {
+            // Es un único cliente
+            return [response];
+          }
+        },
+        error: err => {
+          this.toastr.warning(err.message)
+        }
+      })
+    } else {
+      console.warn('Por favor, ingresa un ID o apellido de cliente');
+    }
   }
 
   buscarPorNombreOBarra(): void {
@@ -86,7 +115,7 @@ export default class FacturacionComponent implements OnInit{
   }
 
   cerrarModal(){
-
+    this.modalCliente=false
   }
 
 }

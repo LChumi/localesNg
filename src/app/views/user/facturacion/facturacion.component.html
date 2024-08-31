@@ -28,15 +28,19 @@
   <div class="grid grid-cols-2 gap-4">
     <div>
       <label class="block text-gray-700">CI/RUC:</label>
-      <input type="text" value="000000000" class="w-full border border-gray-300 p-2 rounded-lg">
+      <input type="text"
+             placeholder="999999999"
+             [(ngModel)]="nombreOCedula"
+             (keyup.enter)="buscarCliente()"
+             class="w-full border border-gray-300 p-2 rounded-lg">
     </div>
     <div>
-      <label class="block text-gray-700">Cliente:</label>
-      <input type="text" readonly value="Nombre del Cliente" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg">
+      <label class="block text-gray-700">{{cliente.}}</label>
+      <input type="text" class="w-full bg-gray-200 border border-gray-300 p-2 rounded-lg" readonly>
     </div>
     <div>
       <label class="block text-gray-700">Dirección:</label>
-      <input type="text" value="Dirección del Cliente" class="w-full border border-gray-300 p-2 rounded-lg">
+      <input type="text" placeholder="Direccion" class="w-full border border-gray-300 p-2 rounded-lg">
     </div>
     <div>
       <label class="block text-gray-700">Vendedor:</label>
@@ -44,11 +48,11 @@
     </div>
     <div>
       <label class="block text-gray-700">Saldo:</label>
-      <input type="text" value="$0.00" class="w-full border border-gray-300 p-2 rounded-lg">
+      <input type="text" placeholder="0.00" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
     </div>
     <div>
       <label class="block text-gray-700">Cupo:</label>
-      <input type="text" value="$0.00" class="w-full border border-gray-300 p-2 rounded-lg">
+      <input type="text" placeholder="0.00" class="w-full border border-gray-300 p-2 rounded-lg" readonly>
     </div>
   </div>
 </div>
@@ -57,8 +61,14 @@
 <div class="bg-white p-4 rounded-lg shadow-md mb-6">
   <div class="mb-4">
     <label class="block text-gray-700">Producto:</label>
-    <input type="text" placeholder="Buscar por barra o nombre" class="w-full border border-gray-300 p-2 rounded-lg">
-  </div>
+    <input
+      type="text"
+      id="nombre-producto"
+      placeholder="Nombre del producto"
+      [(ngModel)]="nombreOBarra"
+      (keyup.enter)="buscarPorNombreOBarra()"
+      class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+      autocomplete="off">  </div>
 
   <div class="bg-gray-50 border border-gray-300 rounded-lg overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200">
@@ -96,7 +106,7 @@
 </div>
 
 
-  @if (!modalCliente){
+  @if (modalCliente){
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
       <div class="bg-white p-8 rounded-md dark:bg-gray-700 w-full max-w-4xl">
         <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Nuevo Producto</h3>
