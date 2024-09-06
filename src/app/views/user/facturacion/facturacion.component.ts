@@ -9,14 +9,17 @@ import {Venta} from "../../../core/models/venta";
 import {FormsModule} from "@angular/forms";
 import {ProductoService} from "../../../core/services/producto.service";
 import {BodegaService} from "../../../core/services/bodega.service";
-import {Observable} from "rxjs";
 import {Cliente} from "../../../core/models/cliente";
 import {VentaService} from "../../../core/services/venta.service";
+import {NgForOf} from "@angular/common";
+import {DetalleVenta} from "../../../core/models/detalle-venta";
+import {Bodega} from "../../../core/models/bodega";
 
 @Component({
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    NgForOf
   ],
   templateUrl: './facturacion.component.html',
   styles: ``
@@ -33,18 +36,22 @@ export default class FacturacionComponent implements OnInit{
 
   usuario!:Usuario;
   producto!:Producto;
+  productoSelected!:Producto;
   venta!:Venta;
   cliente!:Cliente;
+  bodega!:Bodega;
 
   clientes:Cliente[]=[];
   listaProductos:Producto[]=[];
   productosSeleccionados:Producto[]=[];
 
   modalCliente=false;
+  modalListaProductos=false;
 
   almacenName = sessionStorage.getItem('almacen') ?? ''
   usuarioId = Number(sessionStorage.getItem('userId') ?? '')
   username = sessionStorage.getItem('username') ?? ''
+  bodegaId = Number(sessionStorage.getItem('bodegaId') ?? '')
 
   nombreUsuario:string='';
   nombreOBarra:string='';
@@ -62,8 +69,14 @@ export default class FacturacionComponent implements OnInit{
   dirCli:string=''
   creditoCli:number=0
 
+  ventaId:number=0;
+  tipoPrecio:number=0;
+  cantidad:number=0;
+
   ngOnInit(): void {
     this.obtennerUsuario()
+    this.cargarClientePorDefecto()
+    this.cargarBodega()
   }
 
   goToAlmacen(){
@@ -88,11 +101,13 @@ export default class FacturacionComponent implements OnInit{
           if (Array.isArray(response)) {
             if (response.length >= 0){
               this.modalCliente=true;
+              this.clientes=response
             }
             return response;
           } else {
             this.llenarInfoCliente(response)
             this.cliente=response
+            this.cambiarCliente(response)
             return [response];
           }
         },
@@ -111,9 +126,11 @@ export default class FacturacionComponent implements OnInit{
         this.listaProductos = productos
         if (productos.length > 0){
           //this.modalListaProductos=true;
+          console.log(productos.length)
           this.cleanInputs()
         }else{
           //this.modalConfirmacion=true
+          this.toastr.warning("Producto no existe")
           this.cleanInputs()
         }
       },
@@ -148,21 +165,94 @@ export default class FacturacionComponent implements OnInit{
   }
 
   crearVenta(){
-    const venta: Venta = {
-      id: 0,
-      cliente: this.cliente,
-      fecha: this.formatDate(new Date()),
-      usuario: this.usuario,
-      formaPago: '',
-      total:0
+    if (!this.venta){
+      const venta: Venta = {
+        id: 0,
+        cliente: this.cliente,
+        fecha: this.formatDate(new Date()),
+        usuario: this.usuario,
+        formaPago: '',
+        total:0
+      }
+      this.ventaService.crearVenta(venta).subscribe( ventaCreada => {
+        this.venta = ventaCreada
+        this.ventaId = ventaCreada.id
+        });
+    } else if (this.cliente){
+      this.venta.cliente = this.cliente;
+      this.ventaService.actualizarVenta(this.venta, this.ventaId).subscribe( ventaUp =>{
+        this.venta = ventaUp;
+      })
     }
-    this.ventaService.crearVenta(venta).subscribe(
+  }
 
-    )
+  agregarDetalle() {
+    if (!this.venta) {
+      this.crearVenta();
+    }
+    // Asegúrate de que la venta y el producto están definidos
+    if (this.venta && this.productoSelected) {
+      const detalleVenta: DetalleVenta = {
+        id: 0,
+        bodega: this.bodega,
+        venta: this.venta,
+        cantidad: this.cantidad,
+        precioUnitario: this.productoSelected.precio1, // Asegúrate de que el precio esté definido
+        subtotal: this.cantidad * this.productoSelected.precio1,
+        tipoPrecio: this.tipoPrecio,
+        producto: this.productoSelected,
+        precio: this.productoSelected.precio1 // Ajusta si es necesario
+      };
+      // Llama a un servicio para agregar el detalle
+      this.ventaService.agregarDetalle(this.venta.id, detalleVenta, this.tipoPrecio).subscribe({
+        next: detalleAgregado => {
+          this.toastr.success('Detalle agregado exitosamente.');
+        },
+        error: err => {
+          this.toastr.warning('Error al agregar el detalle: ' + err.message);
+        }
+      });
+    } else {
+      this.toastr.warning('Debe seleccionar un producto.');
+    }
+  }
+
+
+  cambiarCliente(nuevoCliente:Cliente){
+    if (this.venta){
+      this.venta.cliente=nuevoCliente;
+      this.ventaService.actualizarVenta(this.venta,this.venta.id).subscribe({
+        next: ventaActualizada => {
+          this.venta = ventaActualizada;
+          this.llenarInfoCliente(nuevoCliente);
+          this.toastr.info("Cliente Modificado")
+        } , error: err => {
+          this.toastr.warning("Error al cambiar de cliente")
+        }
+      })
+    } else {
+      this.cliente = nuevoCliente;
+      this.crearVenta();
+    }
+  }
+
+  cargarBodega(){
+    this.bodegaService.porId(this.bodegaId).subscribe(bodega =>{
+      this.bodega = bodega;
+    })
+  }
+
+  cargarClientePorDefecto(){
+    this.buscarCliente()
+  }
+
+  productoEscogido(producto:Producto){
+    this.productoSelected=producto
+    this.modalListaProductos=false
   }
 
   cleanInputs(){
-
+    this.nombreOBarra=''
   }
 
   cerrarModal(){
