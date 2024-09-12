@@ -34,44 +34,45 @@ export default class FacturacionComponent implements OnInit{
   toastr=             inject(ToastrService)
   router=             inject(Router)
 
-  usuario!:Usuario;
-  producto!:Producto;
-  productoSelected!:Producto;
-  venta!:Venta;
-  cliente!:Cliente;
-  bodega!:Bodega;
+  usuario:           Usuario={} as Usuario;
+  producto:          Producto={} as Producto;
+  productoSelected:  Producto={} as Producto;
+  venta:             Venta={} as Venta;
+  cliente:           Cliente={} as Cliente;
+  bodega:            Bodega={} as Bodega;
 
-  clientes:Cliente[]=[];
-  listaProductos:Producto[]=[];
-  productosSeleccionados:Producto[]=[];
+  clientes:                 Cliente[]=[];
+  listaProductos:           Producto[]=[];
+  productosSeleccionados:   Producto[]=[];
+  ventasPendientes:         Venta[]=[]
 
-  modalCliente=false;
-  modalListaProductos=false;
+  modalCliente=             false;
+  modalListaProductos=      false;
 
-  almacenName = sessionStorage.getItem('almacen') ?? ''
-  usuarioId = Number(sessionStorage.getItem('userId') ?? '')
-  username = sessionStorage.getItem('username') ?? ''
-  bodegaId = Number(sessionStorage.getItem('bodegaId') ?? '')
+  almacenName =   sessionStorage.getItem('almacen') ?? ''
+  usuarioId =     Number(sessionStorage.getItem('userId') ?? '')
+  username =      sessionStorage.getItem('username') ?? ''
+  bodegaId =      Number(sessionStorage.getItem('bodegaId') ?? '')
 
-  nombreUsuario:string='';
-  nombreOBarra:string='';
-  nombreCliente:string='';
-  nombreOCedula:string='9999999999';
-  cupoDisp:number=0;
-  saldoDisp:number=0;
-  direccionCli:string='';
+  nombreUsuario:    string='';
+  nombreOBarra:     string='';
+  nombreCliente:    string='';
+  nombreOCedula:    string='9999999999';
+  cupoDisp:         number=0;
+  saldoDisp:        number=0;
+  direccionCli:     string='';
 
-  nomCli:string=''
-  cedCli:string=''
-  apellCli:string=''
-  emailCli:string=''
-  teleCli:string=''
-  dirCli:string=''
-  creditoCli:number=0
+  nomCli:           string=''
+  cedCli:           string=''
+  apellCli:         string=''
+  emailCli:         string=''
+  teleCli:          string=''
+  dirCli:           string=''
+  creditoCli:       number=0
 
-  ventaId:number=0;
-  tipoPrecio:number=0;
-  cantidad:number=0;
+  ventaId:          number=0;
+  tipoPrecio:       number=0;
+  cantidad:         number=0;
 
   ngOnInit(): void {
     this.obtennerUsuario()
@@ -102,12 +103,13 @@ export default class FacturacionComponent implements OnInit{
             if (response.length >= 0){
               this.modalCliente=true;
               this.clientes=response
+              console.log(this.clientes)
             }
             return response;
           } else {
             this.llenarInfoCliente(response)
             this.cliente=response
-            this.cambiarCliente(response)
+            this.verificarCliente(response)
             return [response];
           }
         },
@@ -117,6 +119,7 @@ export default class FacturacionComponent implements OnInit{
       })
     } else {
       console.warn('Por favor, ingresa un ID o apellido de cliente');
+      return;
     }
   }
 
@@ -148,6 +151,7 @@ export default class FacturacionComponent implements OnInit{
     }
     const cliente: Cliente = {
       id:0,
+      cedula: this.cedCli,
       nombre: this.nomCli,
       apellido: this.apellCli,
       email: this.emailCli,
@@ -220,6 +224,7 @@ export default class FacturacionComponent implements OnInit{
 
   cambiarCliente(nuevoCliente:Cliente){
     if (this.venta){
+      console.log('si tiene venta')
       this.venta.cliente=nuevoCliente;
       this.ventaService.actualizarVenta(this.venta,this.venta.id).subscribe({
         next: ventaActualizada => {
@@ -231,6 +236,7 @@ export default class FacturacionComponent implements OnInit{
         }
       })
     } else {
+      console.log('no tiene venta')
       this.cliente = nuevoCliente;
       this.crearVenta();
     }
@@ -267,10 +273,15 @@ export default class FacturacionComponent implements OnInit{
   }
 
   formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return date.toISOString().split('T')[0]
+  }
+
+  verificarCliente(cli:Cliente){
+    if (this.cliente.cedula === cli.cedula){
+      return
+    } else {
+      this.cambiarCliente(cli)
+    }
   }
 
 }

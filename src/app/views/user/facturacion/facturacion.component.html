@@ -83,13 +83,12 @@
       </thead>
       <tbody>
       <!-- Aquí van las filas de productos -->
-      <tr>
-        <td class="p-2">001</td>
-        <td class="p-2">Producto Ejemplo</td>
-        <td class="p-2">1</td>
-        <td class="p-2">$10.00</td>
-        <td class="p-2">$10.00</td>
-      </tr>
+        @for (producto of listaProductos; track $index){
+          <tr (click)="productoEscogido(producto)" class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer dark:text-white">
+            <td class="py-2 px-4">{{producto.descripcion}}</td>
+            <td class="py-2 px-4 text-green-500 text-center">{{producto.barra}}</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
