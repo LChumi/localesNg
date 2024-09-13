@@ -11,7 +11,7 @@ import {ProductoService} from "../../../core/services/producto.service";
 import {BodegaService} from "../../../core/services/bodega.service";
 import {Cliente} from "../../../core/models/cliente";
 import {VentaService} from "../../../core/services/venta.service";
-import {NgForOf} from "@angular/common";
+import {CurrencyPipe, NgForOf} from "@angular/common";
 import {DetalleVenta} from "../../../core/models/detalle-venta";
 import {Bodega} from "../../../core/models/bodega";
 
@@ -19,7 +19,8 @@ import {Bodega} from "../../../core/models/bodega";
   standalone: true,
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    CurrencyPipe
   ],
   templateUrl: './facturacion.component.html',
   styles: ``
@@ -43,13 +44,16 @@ export default class FacturacionComponent implements OnInit{
 
   clientes:                 Cliente[]=[];
   listaProductos:           Producto[]=[];
-  productosSeleccionados:   Producto[]=[];
   ventasPendientes:         Venta[]=[]
 
   modalCliente=             false;
   modalListaProductos=      false;
   modalVentasPendientes=    false;
   modalListaCliente=        false;
+
+  pagoEfectivo=             true;
+  pagoTarjeta=              false;
+  pagoCredito=              false;
 
   almacenName =   sessionStorage.getItem('almacen') ?? ''
   usuarioId =     Number(sessionStorage.getItem('userId') ?? '')
@@ -73,13 +77,23 @@ export default class FacturacionComponent implements OnInit{
   creditoCli:       number=0
 
   ventaId:          number=0;
-  tipoPrecio:       number=0;
+  tipoPrecio:       number=1;
   cantidad:         number=0;
+
+  montoEfectivo =0;
+  montoTarjeta  =0;
+  montoCredito  =0;
+
+  cambio      =0;
+  faltante    =0;
+  debeCambio  =0;
+  debeAjustar =0;
 
   ngOnInit(): void {
     this.obtennerUsuario()
     this.cargarBodega()
     this.ventasPendientesFacturar()
+    this.updateTotal();
   }
 
   goToAlmacen(){
@@ -131,18 +145,20 @@ export default class FacturacionComponent implements OnInit{
   buscarPorNombreOBarra(): void {
     this.productoService.porNombreOBarra(this.nombreOBarra).subscribe(
       productos => {
-        this.listaProductos = productos
-        if (productos.length > 0){
+        if (productos.length === 1){
+          this.productoSelected = productos[0];
+          this.agregarDetalle()
+          this.cleanInputs();
+        } else if (productos.length > 1){
+          this.listaProductos = productos;
           this.modalListaProductos=true;
-          this.cleanInputs()
-        }else{
-          //this.modalConfirmacion=true
-          this.toastr.warning("Producto no existe")
-          this.cleanInputs()
+          this.cleanInputs();
+        } else {
+          this.toastr.warning("Producto no existe");
+          this.cleanInputs();
         }
       },
       error => {
-        //this.modalConfirmacion=true
         this.cleanInputs()
       }
     )
@@ -180,7 +196,6 @@ export default class FacturacionComponent implements OnInit{
 
   crearVenta(){
     if (Object.keys(this.venta).length ===0){
-      console.log('entro al if')
       const venta: Venta = {
         id: 0,
         cliente: this.cliente,
@@ -196,16 +211,15 @@ export default class FacturacionComponent implements OnInit{
         this.ventaId = ventaCreada.id
         });
     } else if (this.cliente){
-      console.log('Entro al else ')
       this.venta.cliente = this.cliente;
-      this.ventaService.actualizarVenta(this.venta, this.ventaId).subscribe( ventaUp =>{
+      this.ventaService.actualizarVenta(this.venta, this.venta.id).subscribe( ventaUp =>{
         this.venta = ventaUp;
       })
     }
   }
 
   agregarDetalle() {
-    if (!this.venta) {
+    if (Object.keys(this.venta).length ===0) {
       this.crearVenta();
     }
     // Asegúrate de que la venta y el producto están definidos
@@ -223,8 +237,9 @@ export default class FacturacionComponent implements OnInit{
       };
       // Llama a un servicio para agregar el detalle
       this.ventaService.agregarDetalle(this.venta.id, detalleVenta, this.tipoPrecio).subscribe({
-        next: detalleAgregado => {
+        next: venta => {
           this.toastr.success('Detalle agregado exitosamente.');
+          this.venta=venta
         },
         error: err => {
           this.toastr.warning('Error al agregar el detalle: ' + err.message);
@@ -235,10 +250,8 @@ export default class FacturacionComponent implements OnInit{
     }
   }
 
-
   cambiarCliente(nuevoCliente:Cliente){
     if (Object.keys(this.venta).length >0){
-      console.log('if Cambiar Cliente')
       console.log(this.venta)
       this.venta.cliente=nuevoCliente;
       this.ventaService.actualizarVenta(this.venta,this.venta.id).subscribe({
@@ -248,10 +261,10 @@ export default class FacturacionComponent implements OnInit{
           this.toastr.info("Cliente Modificado")
         } , error: err => {
           this.toastr.warning("Error al cambiar de cliente")
+          return
         }
       })
     }else {
-      console.log('else cambiar clinete')
       this.cliente = nuevoCliente;
       this.crearVenta();
     }
@@ -263,6 +276,16 @@ export default class FacturacionComponent implements OnInit{
     })
   }
 
+  procesarPago(){
+    this.ventaService.procesarPago(this.venta.id,this.montoCredito,this.montoEfectivo,this.montoTarjeta).subscribe(
+      venta => {
+        if (venta.estado){
+          this.toastr.success("Pago realizado")
+        }
+      }
+    )
+  }
+
   cargarClientePorDefecto(){
     this.buscarCliente()
   }
@@ -270,6 +293,8 @@ export default class FacturacionComponent implements OnInit{
   productoEscogido(producto:Producto){
     this.productoSelected=producto
     this.modalListaProductos=false
+    this.agregarDetalle()
+
   }
 
   ventaEscogida(venta:Venta){
@@ -322,6 +347,20 @@ export default class FacturacionComponent implements OnInit{
         }
       }
     )
+  }
+
+  /**
+   * Calcular el total de pago
+   * validando que el total pagado sea igual que el total de la venta
+   */
+  updateTotal(){
+    const totalPagado = (this.pagoEfectivo ? this.montoEfectivo: 0)+
+      (this.pagoTarjeta ? this.montoTarjeta : 0)+
+      (this.pagoTarjeta ? this.montoCredito:0);
+    if (totalPagado > this.venta.total){
+      this.toastr.warning('El total pagado no puede superar el total de la venta');
+      return
+    }
   }
 
 }

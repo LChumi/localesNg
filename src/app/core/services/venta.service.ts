@@ -25,8 +25,8 @@ export class VentaService {
     return this.http.put<Venta>(`${this.base_url}modificar-venta/${id}`,venta)
   }
 
-  agregarDetalle(idVenta:number, detalle: DetalleVenta, tipoPrecio:number):Observable<DetalleVenta>{
-    return this.http.post<DetalleVenta>(`${this.base_url}${idVenta}/${tipoPrecio}/detalles-add`, detalle)
+  agregarDetalle(idVenta:number, detalle: DetalleVenta, tipoPrecio:number):Observable<Venta>{
+    return this.http.post<Venta>(`${this.base_url}${idVenta}/${tipoPrecio}/detalles-add`, detalle)
   }
 
   eliminarDetalle(idVenta:number, idDetalle:number){
