@@ -48,6 +48,8 @@ export default class FacturacionComponent implements OnInit{
 
   modalCliente=             false;
   modalListaProductos=      false;
+  modalVentasPendientes=    false;
+  modalListaCliente=        false;
 
   almacenName =   sessionStorage.getItem('almacen') ?? ''
   usuarioId =     Number(sessionStorage.getItem('userId') ?? '')
@@ -76,8 +78,8 @@ export default class FacturacionComponent implements OnInit{
 
   ngOnInit(): void {
     this.obtennerUsuario()
-    this.cargarClientePorDefecto()
     this.cargarBodega()
+    this.ventasPendientesFacturar()
   }
 
   goToAlmacen(){
@@ -100,16 +102,19 @@ export default class FacturacionComponent implements OnInit{
       this.clienteService.buscarCliente(this.nombreOCedula).subscribe({
         next: response => {
           if (Array.isArray(response)) {
-            if (response.length >= 0){
-              this.modalCliente=true;
+            if (response.length > 0){
+              this.modalListaCliente=true;
               this.clientes=response
-              console.log(this.clientes)
+            } else {
+              this.modalCliente=true
+              this.cedCli=this.nombreOCedula
             }
             return response;
           } else {
             this.llenarInfoCliente(response)
             this.cliente=response
             this.verificarCliente(response)
+            this.crearVenta()
             return [response];
           }
         },
@@ -128,8 +133,7 @@ export default class FacturacionComponent implements OnInit{
       productos => {
         this.listaProductos = productos
         if (productos.length > 0){
-          //this.modalListaProductos=true;
-          console.log(productos.length)
+          this.modalListaProductos=true;
           this.cleanInputs()
         }else{
           //this.modalConfirmacion=true
@@ -145,7 +149,7 @@ export default class FacturacionComponent implements OnInit{
   }
 
   guardarCliente(){
-    if (!this.nomCli && !this.apellCli && !this.emailCli && !this.teleCli && !this.dirCli && !this.creditoCli){
+    if (this.nomCli==='' && this.apellCli==='' && this.teleCli===''){
       this.toastr.warning("Ingrese los datos")
       return;
     }
@@ -163,26 +167,36 @@ export default class FacturacionComponent implements OnInit{
     this.clienteService.crear(cliente).subscribe(
       cliente =>{
         this.llenarInfoCliente(cliente)
+        this.cliente=cliente
         this.modalCliente=false;
+        if (Object.keys(this.venta).length >0){
+          this.cambiarCliente(cliente)
+        } else {
+          this.crearVenta()
+        }
       }
     )
   }
 
   crearVenta(){
-    if (!this.venta){
+    if (Object.keys(this.venta).length ===0){
+      console.log('entro al if')
       const venta: Venta = {
         id: 0,
         cliente: this.cliente,
         fecha: this.formatDate(new Date()),
         usuario: this.usuario,
         formaPago: '',
-        total:0
+        estado: false,
+        total:0,
+        detalles:[]
       }
       this.ventaService.crearVenta(venta).subscribe( ventaCreada => {
         this.venta = ventaCreada
         this.ventaId = ventaCreada.id
         });
     } else if (this.cliente){
+      console.log('Entro al else ')
       this.venta.cliente = this.cliente;
       this.ventaService.actualizarVenta(this.venta, this.ventaId).subscribe( ventaUp =>{
         this.venta = ventaUp;
@@ -223,8 +237,9 @@ export default class FacturacionComponent implements OnInit{
 
 
   cambiarCliente(nuevoCliente:Cliente){
-    if (this.venta){
-      console.log('si tiene venta')
+    if (Object.keys(this.venta).length >0){
+      console.log('if Cambiar Cliente')
+      console.log(this.venta)
       this.venta.cliente=nuevoCliente;
       this.ventaService.actualizarVenta(this.venta,this.venta.id).subscribe({
         next: ventaActualizada => {
@@ -235,8 +250,8 @@ export default class FacturacionComponent implements OnInit{
           this.toastr.warning("Error al cambiar de cliente")
         }
       })
-    } else {
-      console.log('no tiene venta')
+    }else {
+      console.log('else cambiar clinete')
       this.cliente = nuevoCliente;
       this.crearVenta();
     }
@@ -255,6 +270,18 @@ export default class FacturacionComponent implements OnInit{
   productoEscogido(producto:Producto){
     this.productoSelected=producto
     this.modalListaProductos=false
+  }
+
+  ventaEscogida(venta:Venta){
+    this.venta = venta;
+    this.modalVentasPendientes=false;
+    this.llenarInfoCliente(venta.cliente)
+  }
+
+  clienteEscogido(cliente:Cliente){
+    this.cliente=cliente
+    this.modalListaCliente=false
+    this.llenarInfoCliente(cliente)
   }
 
   cleanInputs(){
@@ -282,6 +309,19 @@ export default class FacturacionComponent implements OnInit{
     } else {
       this.cambiarCliente(cli)
     }
+  }
+
+  ventasPendientesFacturar(){
+    this.ventaService.listarPendientes(this.usuarioId).subscribe(
+      ventas => {
+        if (ventas.length > 0){
+          this.ventasPendientes = ventas
+          this.modalVentasPendientes=true;
+        }else{
+          this.cargarClientePorDefecto()
+        }
+      }
+    )
   }
 
 }

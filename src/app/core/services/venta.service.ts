@@ -18,7 +18,7 @@ export class VentaService {
   constructor() { }
 
   crearVenta(venta: Venta):Observable<Venta>{
-    return this.http.post<Venta>(`${this.base_url}`, venta)
+    return this.http.post<Venta>(`${this.base_url}crear-venta`, venta)
   }
 
   actualizarVenta (venta: Venta, id:number):Observable<Venta>{
