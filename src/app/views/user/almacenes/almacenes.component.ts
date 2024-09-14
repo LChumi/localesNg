@@ -38,8 +38,6 @@ export default class AlmacenesComponent implements OnInit{
       this.userService.listaBodegas(username).subscribe(
         bodegas => {
           this.listaBodegas = bodegas
-          console.log(bodegas);
-
         }
       )
     }

@@ -253,7 +253,6 @@ export default class FacturacionComponent implements OnInit{
 
   cambiarCliente(nuevoCliente:Cliente){
     if (Object.keys(this.venta).length >0){
-      console.log(this.venta)
       this.venta.cliente=nuevoCliente;
       this.ventaService.actualizarVenta(this.venta,this.venta.id).subscribe({
         next: ventaActualizada => {
