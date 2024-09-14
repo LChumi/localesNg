@@ -55,6 +55,9 @@ export default class FacturacionComponent implements OnInit{
   pagoTarjeta=              false;
   pagoCredito=              false;
 
+  debeCambio=               false;
+  debeAjustar=              false;
+
   almacenName =   sessionStorage.getItem('almacen') ?? ''
   usuarioId =     Number(sessionStorage.getItem('userId') ?? '')
   username =      sessionStorage.getItem('username') ?? ''
@@ -86,8 +89,6 @@ export default class FacturacionComponent implements OnInit{
 
   cambio      =0;
   faltante    =0;
-  debeCambio  =0;
-  debeAjustar =0;
 
   ngOnInit(): void {
     this.obtennerUsuario()
@@ -277,12 +278,21 @@ export default class FacturacionComponent implements OnInit{
   }
 
   procesarPago(){
+    if (this.faltante > 0) {
+      this.toastr.warning('El total pagado no cubre el total de la venta');
+      return;
+    }
+
     this.ventaService.procesarPago(this.venta.id,this.montoCredito,this.montoEfectivo,this.montoTarjeta).subscribe(
       venta => {
         if (venta.estado){
           this.toastr.success("Pago realizado")
+          this.goToAlmacen()
         }
-      }
+      },
+    error => {
+      this.toastr.error('Hubo un error al procesar el pago');
+    }
     )
   }
 
@@ -357,10 +367,20 @@ export default class FacturacionComponent implements OnInit{
     const totalPagado = (this.pagoEfectivo ? this.montoEfectivo: 0)+
       (this.pagoTarjeta ? this.montoTarjeta : 0)+
       (this.pagoTarjeta ? this.montoCredito:0);
-    if (totalPagado > this.venta.total){
-      this.toastr.warning('El total pagado no puede superar el total de la venta');
-      return
+
+    // Calcula el faltante si el total pagado es menor que el total de la venta
+    this.faltante = Math.max(this.venta.total - totalPagado, 0);
+    this.debeAjustar = this.faltante > 0;
+
+    // Calcula el cambio a devolver si el total pagado es mayor que el total de la venta
+    this.cambio = Math.max(totalPagado - this.venta.total, 0);
+    this.debeCambio = this.cambio > 0;
+
+    if (this.pagoEfectivo) {
+      // Si el monto en efectivo es mayor que el total de la venta, se ajusta para solo incluir el total
+      this.montoEfectivo = Math.min(this.montoEfectivo, this.venta.total);
     }
+
   }
 
 }
