@@ -95,6 +95,7 @@ export default class FacturacionComponent implements OnInit{
     this.cargarBodega()
     this.ventasPendientesFacturar()
     this.updateTotal();
+    console.log(this.montoEfectivo)
   }
 
   goToAlmacen(){
@@ -277,11 +278,11 @@ export default class FacturacionComponent implements OnInit{
   }
 
   procesarPago(){
+    console.log(this.montoEfectivo)
     if (this.faltante > 0) {
       this.toastr.warning('El total pagado no cubre el total de la venta');
       return;
     }
-
     this.ventaService.procesarPago(this.venta.id,this.montoCredito,this.montoEfectivo,this.montoTarjeta).subscribe(
       venta => {
         if (venta.estado){
@@ -363,6 +364,10 @@ export default class FacturacionComponent implements OnInit{
    * validando que el total pagado sea igual que el total de la venta
    */
   updateTotal(){
+    this.montoEfectivo = +this.montoEfectivo || 0;  // Convierte a número, si es vacío o NaN usa 0
+    this.montoTarjeta = +this.montoTarjeta || 0;
+    this.montoCredito = +this.montoCredito || 0;
+    console.log(this.montoEfectivo)
     const totalPagado = (this.pagoEfectivo ? this.montoEfectivo: 0)+
       (this.pagoTarjeta ? this.montoTarjeta : 0)+
       (this.pagoTarjeta ? this.montoCredito:0);
@@ -380,6 +385,12 @@ export default class FacturacionComponent implements OnInit{
       this.montoEfectivo = Math.min(this.montoEfectivo, this.venta.total);
     }
 
+  }
+
+  cerrarModalVentas() {
+      this.modalVentasPendientes = false;
+      this.nombreOCedula = '9999999999';
+      this.buscarCliente();
   }
 
 }
