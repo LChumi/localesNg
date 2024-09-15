@@ -8,6 +8,6 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './admin.component.html',
   styles: ``
 })
-export class AdminComponent {
+export default class AdminComponent {
 
 }

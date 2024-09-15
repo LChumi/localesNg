@@ -40,6 +40,32 @@ export const routes: Routes = [
           {path: '',redirectTo: 'almacenes',pathMatch: 'full'},
           {path: '**',redirectTo: 'almacenes',pathMatch: 'full'}
         ]
+      },
+      {
+        path: 'admin',
+        loadComponent: () => import('./layouts/admin/admin.component'),
+        children:[
+          {
+            path: 'usuarios',
+            title: 'Usuarios',
+            loadComponent: () => import('./views/admin/usuarios/usuarios.component')
+          },
+          {
+            path: 'almacenes',
+            title: 'Almacenes',
+            loadComponent: () => import('./views/admin/almacenes/almacenes.component')
+          },
+          {
+            path: 'productos',
+            title: 'Productos',
+            loadComponent: () => import('./views/admin/productos/productos.component')
+          },
+          {
+            path: 'inventarios',
+            title: 'Inventrios',
+            loadComponent: () => import('./views/admin/inventarios/inventarios.component')
+          }
+        ]
       }
     ]
   },
