@@ -17,6 +17,9 @@ export default class InventariosComponent implements OnInit{
   reporteService= inject(ReporteService)
 
   listaMovimientos: MovimientoInventario[]=[]
+  filterComprobante:MovimientoInventario[]=[]
+
+  tipo:         string='Tipo';
 
   fechaInicio:  any=formatDate(new Date, 'dd/MM/yyyy','en-US');
   fechaFin:     any=formatDate(new Date, 'dd/MM/yyyy','en-US');
@@ -52,6 +55,7 @@ export default class InventariosComponent implements OnInit{
 
   actualizarMovimientos(mov: MovimientoInventario[]){
     this.listaMovimientos=mov;
+    this.filterComprobante=mov;
   }
 
   limpiar(){
@@ -98,6 +102,15 @@ export default class InventariosComponent implements OnInit{
       return false;
     }
     return true
+  }
+
+  searchMovimientoTipo(){
+    this.listaMovimientos = this.filterComprobante.filter((movimiento)=>{
+      if (movimiento.tipo !== null){
+        return movimiento.tipo.toLowerCase().includes(this.tipo.toLowerCase());
+      }
+      return false;
+    })
   }
 
   ngOnInit(): void {

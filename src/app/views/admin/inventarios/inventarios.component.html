@@ -17,6 +17,15 @@
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:border-gray-600 dark:placeholder:-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                  (change)="formatearFechaFin()">
         </form>
+        <form>
+          <label for="fecha" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo Movimiento</label>
+          <select id="tipo" name="tipo" title="Tipo" [(ngModel)]="tipo" (change)="searchMovimientoTipo()"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:border-gray-600 dark:placeholder:-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option selected="">{{tipo}}</option>
+            <option value="ENTRADA">ENTRADA</option>
+            <option value="SALIDA">SALIDA</option>
+          </select>
+        </form>
         <div class="flex justify-center items-center">
           <div class="flex items-center">
             <button type="button" (click)="buscar()"
