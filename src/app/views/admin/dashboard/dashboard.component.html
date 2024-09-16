@@ -1,0 +1,15 @@
+<section class="px-10 py-10">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:gap-8">
+
+    @if (cargaTarjeta) {
+      <app-tarjetas
+        [titulo]="'Comprobantes totales '"
+        [valor]="getNroComprobantes()"
+        aLink='Ver Comprobantes'
+        [svgIcon]="svgComprobante"
+        [routerLink]="routerLinkComprobnates">
+      </app-tarjetas>
+    }
+
+  </div>
+</section>

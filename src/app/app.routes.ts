@@ -64,6 +64,11 @@ export const routes: Routes = [
             path: 'inventarios',
             title: 'Inventrios',
             loadComponent: () => import('./views/admin/inventarios/inventarios.component')
+          },
+          {
+            path: 'dashboard',
+            title: 'Dashboard',
+            loadComponent: () => import('./views/admin/dashboard/dashboard.component')
           }
         ]
       }

@@ -43,12 +43,12 @@ export class UsuarioService {
     return this.http.get<Bodega[]>(`${this.base_url}listaBodegas/${usuarioId}`)
   }
 
-  agregarAlmacen(usuarioId:number,almacenId:number):Observable<any>{
-    return this.http.post<any>(`${this.base_url}agregar-almacen/${usuarioId}/${almacenId}`,{})
+  agregarAlmacen(usuarioId:number,almacenId:number):Observable<Usuario>{
+    return this.http.post<Usuario>(`${this.base_url}agregar-almacen/${usuarioId}/almacenes/${almacenId}`,{})
   }
 
-  eliminarAlmacen(usuarioId:number,almacenId:number):Observable<any>{
-    return this.http.delete<any>(`${this.base_url}eliminar-almacen/${usuarioId}/${almacenId}`)
+  eliminarAlmacen(usuarioId:number,almacenId:number):Observable<Usuario>{
+    return this.http.delete<Usuario>(`${this.base_url}eliminar-almacen/${usuarioId}/almacenes/${almacenId}`)
   }
 
 

@@ -60,4 +60,8 @@ export class VentaService {
     return this.http.get<Venta[]>(`${this.base_url}listar-pendientes/${usuarioId}`);
   }
 
+  totalesDia(): Observable<number>{
+    return this.http.get<number>(`${this.base_url}/totales`);
+  }
+
 }

@@ -15,7 +15,7 @@ export class EntradaInventarioService {
   constructor() { }
 
   agregarProducto(entradaInventario: EntradaInventario):Observable<any>{
-    return this.http.post<any>(`${this.base_url}`,entradaInventario)
+    return this.http.post<any>(`${this.base_url}agregar-producto`,entradaInventario, {responseType: 'text' as 'json'})
   }
 
   incrementarStock(productoId: number, bodegaId: number, cantidad: number, usuarioId: number):Observable<string>{
