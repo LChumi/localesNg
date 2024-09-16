@@ -1,263 +1,313 @@
 <section class="dark:bg-gray-700 bg-white py-16 relative">
-  <div class="container mx-auto px-4">
-    <!-- Flecha de regreso -->
-    <button (click)="goToAlmacen()" class="absolute top-4 left-4 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-150 ease-in-out focus:outline-none">
-      <!-- Icono de flecha de regreso (SVG) -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5"></path>
-        <path d="M12 19l-7-7 7-7"></path>
-      </svg>
-    </button>
+  @if (ingresaqrProductos){
+    <div class="container mx-auto px-4">
+      <!-- Flecha de regreso -->
+      <button (click)="ingresaqrProductos=false" class="absolute top-4 left-4 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition duration-150 ease-in-out focus:outline-none">
+        <!-- Icono de flecha de regreso (SVG) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"></path>
+          <path d="M12 19l-7-7 7-7"></path>
+        </svg>
+      </button>
 
-    <div class="border-blue-600 border-l-4 pl-5 mb-8">
-      <h2 class="text-2xl font-semibold text-black dark:text-white mb-2">
-        Productos
-      </h2>
-      <p class="text-sm font-medium text-black dark:text-gray-400">
-        Ingreso de Productos
-      </p>
-    </div>
-
-    <div class="flex justify-center">
-      <!-- Input para buscar por nombre -->
-      <div class="w-full md:w-1/3 px-4 mb-6">
-        <label for="nombre-producto" class="block text-base font-medium text-black dark:text-white mb-2">
-          Nombre o Barra del Producto
-        </label>
-        <input
-          type="text"
-          id="nombre-producto"
-          placeholder="Nombre del producto"
-          [(ngModel)]="nombreOBarra"
-          (keyup.enter)="buscarPorNombreOBarra()"
-          class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-          autocomplete="off">
+      <div class="border-blue-600 border-l-4 pl-5 mb-8">
+        <h2 class="text-2xl font-semibold text-black dark:text-white mb-2">
+          Productos
+        </h2>
+        <p class="text-sm font-medium text-black dark:text-gray-400">
+          Ingreso de Productos
+        </p>
       </div>
-    </div>
 
-    @if (modalListaProductos){
-      <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
-          <!-- Botón de cerrar -->
-          <button
-            class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            (click)="modalListaProductos=false"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-          <!-- Contenido del modal -->
-          <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Lista Productos</h3>
-          <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead class="bg-gray-50 dark:bg-gray-600">
-              <tr>
-                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Descripción</th>
-                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Código</th>
-              </tr>
-              </thead>
-              <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <!-- Iterar sobre los productos -->
-              <tr *ngFor="let producto of listaProductos" (click)="productoEscogido(producto)" class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer dark:text-white">
-                <td class="py-2 px-4">{{producto.descripcion}}</td>
-                <td class="py-2 px-4 text-green-500 text-center">{{producto.barra}}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    }
-
-    @if(modalProductoSelct && productoSelected) {
-      <!-- Mostrar información del producto -->
-      <div class="mt-8 p-6 rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
-        <h3 class="text-lg font-semibold text-black dark:text-white mb-4">Información del Producto</h3>
-        <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Descripción:</strong> {{ productoSelected.descripcion }}</p>
-        <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Código de Barras:</strong> {{ productoSelected.descripcion }}</p>
-        <p class="text-md text-gray-700 dark:text-gray-300 mb-4"><strong>Precio:</strong> {{ productoSelected.precio1 }}</p>
-
-        <!-- Input para cantidad -->
-        <div class="mb-4">
-          <label for="cantidad" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Cantidad
-          </label>
-          <input
-            type="number"
-            id="cantidad"
-            placeholder=0
-            [(ngModel)]="cantidad"
-            class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-            autocomplete="off"
-            step="1"
-            min="0"
-          >
-        </div>
-
-        <!-- Input para Bodega  -->
-        <div class="mb-4">
-          <label for="bodega" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Bodega
+      <div class="flex justify-center">
+        <!-- Input para buscar por nombre -->
+        <div class="w-full md:w-1/3 px-4 mb-6">
+          <label for="nombre-producto" class="block text-base font-medium text-black dark:text-white mb-2">
+            Nombre o Barra del Producto
           </label>
           <input
             type="text"
-            id="bodega"
-            [(ngModel)]="nombreBodega"
-            (input)="formatInputNumber()"
-            class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-            autocomplete="off"
-            readonly
-          >
-        </div>
-
-        <button (click)="agregarStockProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
-          Agregar Producto
-        </button>
-      </div>
-    }
-
-    <!-- Modal para agregar nuevo producto -->
-    @if (mostrarModal){
-      <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-        <div class="bg-white p-8 rounded-md dark:bg-gray-700 w-full max-w-4xl">
-          <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Nuevo Producto</h3>
-          <!-- Formulario para agregar un nuevo producto -->
-          <div class="grid gap-6 mb-6 grid-cols-1 md:grid-cols-2">
-            <div>
-              <label for="barra" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Barra</label>
-              <input
-                type="text"
-                name="barra"
-                id="barra"
-                [(ngModel)]="barraNueva"
-                title="Barra"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Ingrese la barra del producto"
-                autocomplete="off"
-              >
-            </div>
-            <div>
-              <label for="descripcion" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Descripción</label>
-              <input
-                type="text"
-                name="descripcion"
-                id="descripcion"
-                [(ngModel)]="descripcionNueva"
-                title="Descripción"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Agregue la descripción o nombre del producto"
-                autocomplete="off"
-              >
-            </div>
-            <div class="col-span-1">
-              <label for="costo" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Costo</label>
-              <input
-                type="number"
-                id="costo"
-                placeholder="0.00"
-                [(ngModel)]="costo"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                autocomplete="off"
-                step="0.01"
-                min="0"
-              >
-            </div>
-
-            <div class="col-span-1">
-              <label for="precio1" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Precio 1</label>
-              <input
-                type="number"
-                id="precio1"
-                placeholder="0.00"
-                [(ngModel)]="precio1"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                autocomplete="off"
-                step="0.01"
-                min="0"
-              >
-            </div>
-
-            <div class="col-span-1">
-              <label for="precio2" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Precio 2</label>
-              <input
-                type="number"
-                id="precio2"
-                placeholder="0.00"
-                [(ngModel)]="precio2"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                autocomplete="off"
-                step="0.01"
-                min="0"
-              >
-            </div>
-
-            <div class="col-span-1">
-              <label for="precio3" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Precio 3</label>
-              <input
-                type="number"
-                id="precio3"
-                placeholder="0.00"
-                [(ngModel)]="precio3"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                autocomplete="off"
-                step="0.01"
-                min="0"
-              >
-            </div>
-            <div class="mb-4">
-              <label for="cantidadProdN" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
-                Cantidad
-              </label>
-              <input
-                type="number"
-                id="cantidadProdN"
-                placeholder=0
-                [(ngModel)]="cantidad"
-                class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-                autocomplete="off"
-                step="1"
-                min="0"
-              >
-            </div>
-            <!-- Input para proveedor -->
-            <div class="col-span-1">
-              <label for="proveedor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Proveedores
-              </label>
-              <select
-                id="proveedor"
-                name="proveedor"
-                [(ngModel)]="proveedor"
-                required
-                class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-              >
-                @for (proveedor of listaProveedores; track proveedor.id){
-                  <option [ngValue]="proveedor">{{proveedor.nombre}}</option>
-                }
-              </select>
-            </div>
-          </div>
-          <div class="flex gap-4">
-            <button (click)="cerrarModal()" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-              <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-              </svg>
-              Cancelar
-            </button>
-            <button (click)="guardarProducto()"
-              type="button" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
-                <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
-              </svg>
-              Guardar
-            </button>
-          </div>
+            id="nombre-producto"
+            placeholder="Nombre del producto"
+            [(ngModel)]="nombreOBarra"
+            (keyup.enter)="buscarPorNombreOBarra()"
+            class="w-full bg-transparent rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-black dark:text-white outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+            autocomplete="off">
         </div>
       </div>
-    }
-  </div>
+
+      @if (modalListaProductos){
+        <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
+            <!-- Botón de cerrar -->
+            <button
+              class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+              (click)="modalListaProductos=false"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            <!-- Contenido del modal -->
+            <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Lista Productos</h3>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-600">
+                <tr>
+                  <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Descripción</th>
+                  <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Código</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <!-- Iterar sobre los productos -->
+                <tr *ngFor="let producto of listaProductos" (click)="productoEscogido(producto)" class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer dark:text-white">
+                  <td class="py-2 px-4">{{producto.descripcion}}</td>
+                  <td class="py-2 px-4 text-green-500 text-center">{{producto.barra}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if(modalProductoSelct && productoSelected) {
+        <!-- Mostrar información del producto -->
+        <div class="mt-8 p-6 rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
+          <h3 class="text-lg font-semibold text-black dark:text-white mb-4">Información del Producto</h3>
+          <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Descripción:</strong> {{ productoSelected.descripcion }}</p>
+          <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Código de Barras:</strong> {{ productoSelected.descripcion }}</p>
+          <p class="text-md text-gray-700 dark:text-gray-300 mb-4"><strong>Precio:</strong> {{ productoSelected.precio1 }}</p>
+
+          <!-- Input para cantidad -->
+          <div class="mb-4">
+            <label for="cantidad" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Cantidad
+            </label>
+            <input
+              type="number"
+              id="cantidad"
+              placeholder=0
+              [(ngModel)]="cantidad"
+              class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+              autocomplete="off"
+              step="1"
+              min="0"
+            >
+          </div>
+
+          <!-- Input para Bodega  -->
+          <div class="mb-4">
+            <label for="bodega" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Bodega
+            </label>
+            <input
+              type="text"
+              id="bodega"
+              [(ngModel)]="nombreBodega"
+              (input)="formatInputNumber()"
+              class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+              autocomplete="off"
+              readonly
+            >
+          </div>
+
+          <button (click)="agregarStockProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
+            Agregar Producto
+          </button>
+        </div>
+      }
+
+      <!-- Modal para agregar nuevo producto -->
+      @if (mostrarModal){
+        <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div class="bg-white p-8 rounded-md dark:bg-gray-700 w-full max-w-4xl">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Nuevo Producto</h3>
+            <!-- Formulario para agregar un nuevo producto -->
+            <div class="grid gap-6 mb-6 grid-cols-1 md:grid-cols-2">
+              <div>
+                <label for="barra" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Barra</label>
+                <input
+                  type="text"
+                  name="barra"
+                  id="barra"
+                  [(ngModel)]="barraNueva"
+                  title="Barra"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Ingrese la barra del producto"
+                  autocomplete="off"
+                >
+              </div>
+              <div>
+                <label for="descripcion" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Descripción</label>
+                <input
+                  type="text"
+                  name="descripcion"
+                  id="descripcion"
+                  [(ngModel)]="descripcionNueva"
+                  title="Descripción"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Agregue la descripción o nombre del producto"
+                  autocomplete="off"
+                >
+              </div>
+              <div class="col-span-1">
+                <label for="costo" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Costo</label>
+                <input
+                  type="number"
+                  id="costo"
+                  placeholder="0.00"
+                  [(ngModel)]="costo"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  autocomplete="off"
+                  step="0.01"
+                  min="0"
+                >
+              </div>
+
+              <div class="col-span-1">
+                <label for="precio1" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Precio 1</label>
+                <input
+                  type="number"
+                  id="precio1"
+                  placeholder="0.00"
+                  [(ngModel)]="precio1"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  autocomplete="off"
+                  step="0.01"
+                  min="0"
+                >
+              </div>
+
+              <div class="col-span-1">
+                <label for="precio2" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Precio 2</label>
+                <input
+                  type="number"
+                  id="precio2"
+                  placeholder="0.00"
+                  [(ngModel)]="precio2"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  autocomplete="off"
+                  step="0.01"
+                  min="0"
+                >
+              </div>
+
+              <div class="col-span-1">
+                <label for="precio3" class="block text-sm font-medium text-gray-900 dark:text-gray-200 mb-2">Precio 3</label>
+                <input
+                  type="number"
+                  id="precio3"
+                  placeholder="0.00"
+                  [(ngModel)]="precio3"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  autocomplete="off"
+                  step="0.01"
+                  min="0"
+                >
+              </div>
+              <div class="mb-4">
+                <label for="cantidadProdN" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
+                  Cantidad
+                </label>
+                <input
+                  type="number"
+                  id="cantidadProdN"
+                  placeholder=0
+                  [(ngModel)]="cantidad"
+                  class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+                  autocomplete="off"
+                  step="1"
+                  min="0"
+                >
+              </div>
+              <!-- Input para proveedor -->
+              <div class="col-span-1">
+                <label for="proveedor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Proveedores
+                </label>
+                <select
+                  id="proveedor"
+                  name="proveedor"
+                  [(ngModel)]="proveedor"
+                  required
+                  class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+                >
+                  @for (proveedor of listaProveedores; track proveedor.id){
+                    <option [ngValue]="proveedor">{{proveedor.nombre}}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <button (click)="cerrarModal()" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                </svg>
+                Cancelar
+              </button>
+              <button (click)="guardarProducto()"
+                      type="button" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
+                  <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
+                </svg>
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <section>
+      <section class="p-4 px-4 py-4">
+        <div class="card card-actions">
+          <div class="card-body">
+            <button data-modal-target="new-usuario-modal" data-modal-toggle="new-usuario-modal" type="button" (click)="ingresaqrProductos=true"
+                    class="bg-sky-600 hover:bg-sky-500 text-white py-2 px-4 rounded flex items-center space-x-2">
+              <span class="text-base">AgregarProducto</span>
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="p-4">Id</th>
+            <th scope="col" class="px-6 py-3">Producto</th>
+            <th scope="col" class="px-6 py-3">Stock</th>
+            <th scope="col" class="px-6 py-3">Almacen</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- listas -->
+            @for (producto of listaProductoBod; track $index) {
+              <tr class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {{producto.id}}
+                </th>
+                <td class="px-4 py-2">
+                  {{producto.producto.descripcion}}
+                </td>
+                <td class="px-4 py-2">
+                  {{producto.stock || '0'}}
+                </td>
+                <td class="px-4 py-2">
+                  {{producto.bodega.nombre || 'SN'}}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
   @if (modalConfirmacion){
     <app-modal-confirmacion-yn
       [titulo]="titulo"

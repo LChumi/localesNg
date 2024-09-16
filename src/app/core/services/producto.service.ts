@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Producto } from '../models/producto';
 import { Observable } from 'rxjs';
+import {ProductoAlmacen} from "../models/productoAlmacen";
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,9 @@ export class ProductoService {
 
   porNombreOBarra(data:string):Observable<Producto[]>{
     return this.http.get<Producto[]>(`${this.base_url}barra-desc/${data}`)
+  }
+
+  listarProductosAlmacen():Observable<ProductoAlmacen[]>{
+    return this.http.get<ProductoAlmacen[]>(`${this.base_url}productos-almacen`)
   }
 }

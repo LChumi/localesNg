@@ -12,6 +12,7 @@ import {Producto} from "../../../core/models/producto";
 import {Bodega} from "../../../core/models/bodega";
 import {Proveedor} from "../../../core/models/proveedor";
 import {EntradaInventario} from "../../../core/models/entrada-inventario";
+import {ProductoAlmacen} from "../../../core/models/productoAlmacen";
 
 @Component({
   selector: 'app-productos',
@@ -34,10 +35,11 @@ export default class ProductosComponent {
   router=              inject(Router)
 
   productoSelected?:Producto;
-  bodega:          Bodega={} as Bodega;
+  bodega:           Bodega={} as Bodega;
   proveedor:        Proveedor={} as Proveedor;
   listaProveedores: Proveedor[] =[];
   listaProductos:   Producto[] =[];
+  listaProductoBod: ProductoAlmacen[]=[]
 
   barraNueva:       string=''
   descripcionNueva: string =''
@@ -56,12 +58,14 @@ export default class ProductosComponent {
   modalConfirmacion:   boolean = false;
   modalListaProductos: boolean = false;
   modalProductoSelct:  boolean = false;
+  ingresaqrProductos:  boolean = false;
 
   constructor() {}
 
   ngOnInit(): void {
     this.listarProveedores()
     this.bodegaSelected()
+    this.listarProductos()
   }
 
   buscarPorNombreOBarra(): void {
@@ -216,7 +220,19 @@ export default class ProductosComponent {
     )
   }
 
+  listarProductos(){
+    this.productoService.listarProductosAlmacen().subscribe(
+      data => {
+        this.listaProductoBod=data
+      }
+    )
+  }
+
   guardarProducto(){
     this.guardarProductoNuevo()
+  }
+
+  mostarVistaIngresoProducto(){
+
   }
 }

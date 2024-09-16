@@ -15,12 +15,12 @@ export class ReporteService {
   constructor() { }
 
   movimientosDia():Observable<MovimientoInventario[]>{
-    return this.http.get<MovimientoInventario[]>(`${this.base_url}lista-moviminetos`)
+    return this.http.get<MovimientoInventario[]>(`${this.base_url}lista-movimientos`)
   }
 
   movimientosEntreFechas(fechaInicio:string, fechaFin:string):Observable<MovimientoInventario[]>{
     const params = {
-      params: {fechaInicio:fechaInicio, fechaFin:fechaFin}
+      params: {fechaInicial:fechaInicio, fechaFin:fechaFin}
     }
     return this.http.get<MovimientoInventario[]>(`${this.base_url}lista-movimientos-fechas`,params)
   }

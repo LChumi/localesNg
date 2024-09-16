@@ -1,1 +1,71 @@
-<p>inventarios works!</p>
+<section>
+  <div class=" px-6 py-6 text-2xl font-serif">Comprobantes</div>
+</section>
+<div>
+  <section>
+    <div class="px-4 py-4 card card-compact">
+      <div class="card-body grid grid-cols-3 gap-3 lg:grid-cols-4 lg:gap-8">
+        <form>
+          <label for="fecha" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
+          <input type="date" id="fecha" name="fechaInicio" [(ngModel)]="fechaInicio"
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:border-gray-600 dark:placeholder:-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                 (change)="formatearFechaInicio()">
+        </form>
+        <form>
+          <label for="fechaFin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha Fin </label>
+          <input type="date" id="fechaFin" name="fechaFin" [(ngModel)]="fechaFin"
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:border-gray-600 dark:placeholder:-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                 (change)="formatearFechaFin()">
+        </form>
+        <div class="flex justify-center items-center">
+          <div class="flex items-center">
+            <button type="button" (click)="buscar()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded flex items-center gap-2 ">
+              <svg class="w-7 h-7 text-gray-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                   width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                      d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+              </svg>
+              <span>Buscar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<section>
+  <div class="overflow-x-auto py-4"></div>
+  <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <tr>
+      <th scope="col" class="px-6 py-3">Producto</th>
+      <th scope="col" class="px-6 py-3">Bodega</th>
+      <th scope="col" class="px-6 py-3">Cantidad</th>
+      <th scope="col" class="px-6 py-3">Tipo Inventario</th>
+      <th scope="col" class="px-6 py-3">Fecha Inventario</th>
+      <th scope="col" class="px-6 py-3">Usuario</th>
+      <th scope="col" class="px-6 py-3"></th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (inventario of listaMovimientos; track inventario.id) {
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{inventario.producto.descripcion || 'Prodcuto'}}</th>
+          <td class="px-6 py-4">{{inventario.bodega.nombre || 'Bodega'}}</td>
+          <td class="px-6 py-4">{{inventario.cantidad || '0'}}</td>
+          <td
+            class="px-6 py-4"
+            [ngClass]="{
+            'text-green-600': inventario?.tipo === 'ENTRADA',
+            'text-orange-600': inventario?.tipo === 'SALIDA',
+            'text-gray-600': inventario?.tipo !== 'Autorizado' && inventario?.tipo !== 'Devuelta'}">
+            {{inventario?.tipo || 'Sin estado'}}
+          </td>
+          <td class="px-6 py-4">{{inventario.fecha || ' '}}</td>
+          <td class="px-6 py-4">{{inventario?.usuario?.nombreUsuario || 'Sin Usuario'}}</td>
+        </tr>
+        }
+    </tbody>
+  </table>
+</section>

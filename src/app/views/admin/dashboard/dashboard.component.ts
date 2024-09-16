@@ -1,6 +1,9 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {TarjetasComponent} from "../../../components/tarjetas/tarjetas.component";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {VentaService} from "../../../core/services/venta.service";
+import {UsuarioService} from "../../../core/services/usuario.service";
+import {ProductoService} from "../../../core/services/producto.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -12,15 +15,49 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 export default class DashboardComponent implements OnInit{
 
   sanitizer=inject(DomSanitizer);
+  ventaService=inject(VentaService);
+  usuarioService=inject(UsuarioService);
+  productoService=inject(ProductoService)
 
   usuariosCount:     number = 0;
   cargaTarjeta:      boolean = false;
+  totales:           number = 0;
+  totalUsuarios:     number =0;
+  totalProductos:    number =0;
 
   ngOnInit(): void {
+    this.getNroComprobantes()
+    this.getNroUsuarios()
+    this.getProdcutos()
+    this.svgUsuario = this.getSanitiedSvgUsuario();
+    this.svgComprobante = this.getSanitiedSvgComprobante();
+    this.svgDinero = this.getSanitiedSvgDinero();
   }
 
   getNroComprobantes(){
-    return 0;
+    this.ventaService.totalesDia().subscribe(
+      total => {
+        this.totales = total;
+        console.log(total)
+        this.cargaTarjeta = true;
+      }
+    )
+  }
+
+  getNroUsuarios(){
+    this.usuarioService.listar().subscribe(
+      listaUsuarios => {
+        this.totalUsuarios = listaUsuarios.length;
+      }
+    )
+  }
+
+  getProdcutos(){
+    this.productoService.listar().subscribe(
+      productos => {
+        this.totalProductos = productos.length;
+      }
+    )
   }
 
   svgUsuario: any = `<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -29,8 +66,8 @@ export default class DashboardComponent implements OnInit{
   svgComprobante: any = `<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
 </svg>`
-  svgDinero: any = `<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-  <path fill-rule="evenodd" d="M5.617 2.076a1 1 0 0 1 1.09.217L8 3.586l1.293-1.293a1 1 0 0 1 1.414 0L12 3.586l1.293-1.293a1 1 0 0 1 1.414 0L16 3.586l1.293-1.293A1 1 0 0 1 19 3v18a1 1 0 0 1-1.707.707L16 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L12 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L8 20.414l-1.293 1.293A1 1 0 0 1 5 21V3a1 1 0 0 1 .617-.924ZM9 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clip-rule="evenodd"/>
+  svgDinero: any = `<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17.345a4.76 4.76 0 0 0 2.558 1.618c2.274.589 4.512-.446 4.999-2.31.487-1.866-1.273-3.9-3.546-4.49-2.273-.59-4.034-2.623-3.547-4.488.486-1.865 2.724-2.899 4.998-2.31.982.236 1.87.793 2.538 1.592m-3.879 12.171V21m0-18v2.2"/>
 </svg>`
 
   getSanitiedSvgUsuario(): SafeHtml {
@@ -43,6 +80,6 @@ export default class DashboardComponent implements OnInit{
     return this.sanitizer.bypassSecurityTrustHtml(this.svgDinero)
   }
 
-  routerLinkComprobnates: any = ['/cumpleaños', 'admin', 'comprobantes']
-  routerLinkUsuarios: any = ['/cumpleaños', 'admin', 'usuarios']
+  routerLinkComprobnates: any = ['/bar', 'admin', 'inventarios']
+  routerLinkUsuarios: any = ['/bar', 'admin', 'usuarios']
 }

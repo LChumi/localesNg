@@ -69,6 +69,16 @@ export const routes: Routes = [
             path: 'dashboard',
             title: 'Dashboard',
             loadComponent: () => import('./views/admin/dashboard/dashboard.component')
+          },
+          {
+            path: 'proveedores',
+            title: 'Proveedores',
+            loadComponent: () => import('./views/admin/proveedores/proveedores.component')
+          },
+          {
+            path: 'ventas',
+            title: 'Ventas',
+            loadComponent: () => import('./views/admin/ventas/ventas.component')
           }
         ]
       }

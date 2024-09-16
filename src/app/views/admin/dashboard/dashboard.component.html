@@ -3,11 +3,27 @@
 
     @if (cargaTarjeta) {
       <app-tarjetas
-        [titulo]="'Comprobantes totales '"
-        [valor]="getNroComprobantes()"
+        [titulo]="'Ventas totales '"
+        [valor]="totales"
+        aLink='Ver Comprobantes'
+        [svgIcon]="svgDinero"
+        [routerLink]="routerLinkComprobnates">
+      </app-tarjetas>
+
+      <app-tarjetas
+        [titulo]="'Usuarios '"
+        [valor]="totalUsuarios"
+        aLink='Ver Comprobantes'
+        [svgIcon]="svgUsuario"
+        [routerLink]="routerLinkUsuarios">
+      </app-tarjetas>
+
+      <app-tarjetas
+        [titulo]="'Productos '"
+        [valor]="totalProductos"
         aLink='Ver Comprobantes'
         [svgIcon]="svgComprobante"
-        [routerLink]="routerLinkComprobnates">
+        [routerLink]="routerLinkUsuarios">
       </app-tarjetas>
     }
 

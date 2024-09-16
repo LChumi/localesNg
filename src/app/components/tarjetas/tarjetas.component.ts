@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, numberAttribute} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
 
@@ -11,7 +11,7 @@ import {RouterLink} from "@angular/router";
 })
 export class TarjetasComponent {
   @Input() titulo?:      string;
-  @Input() valor?:       number;
+  @Input({transform: numberAttribute}) valor?:       number;
   @Input() aLink?:       string;
   @Input() svgIcon!:     string;
   @Input() routerLink?:  string;
