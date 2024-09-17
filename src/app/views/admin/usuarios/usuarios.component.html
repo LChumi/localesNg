@@ -30,10 +30,11 @@
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th scope="col" class="p-4">Id</th>
+          <th scope="col" class="px-4">Nombre Usuario</th>
+          <th scope="col" class="px-6 py-3">Apellido</th>
           <th scope="col" class="px-6 py-3">Nombre</th>
           <th scope="col" class="px-6 py-3">Rol</th>
-          <th scope="col" class="px-6 py-3"></th>
+          <th scope="col" class="px-6 py-3"># Bodegas</th>
         </tr>
         </thead>
         <tbody>
@@ -41,13 +42,19 @@
           @for (usuario of listaUsuarios; track $index) {
             <tr (click)="usuarioSelect=usuario" class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
               <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {{usuario.id}}
+                {{usuario.nombreUsuario}}
               </th>
+              <td class="px-4 py-2">
+                {{usuario.apellido}}
+              </td>
               <td class="px-4 py-2">
                 {{usuario.nombre}}
               </td>
               <td class="px-4 py-2">
                 {{usuario.rol.descripcion || 'SN'}}
+              </td>
+              <td class="px-4 py-2">
+                {{usuario.bodegas.length || '0'}}
               </td>
               <th scope="row" class="px-4 py-2">
                 <button title="Detalles" (click)="detalles(usuario)"
@@ -316,7 +323,7 @@
                     d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                     clip-rule="evenodd"></path>
             </svg>
-            Agregar nuevo Usuario
+            Actualizar usuario
           </button>
         </form>
       </div>

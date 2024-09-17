@@ -11,6 +11,8 @@ import {Bodega} from "../../../core/models/bodega";
 import {EntradaInventarioService} from "../../../core/services/entrada-inventario.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
+import {ProductoAlmacen} from "../../../core/models/productoAlmacen";
+import {EntradaInventario} from "../../../core/models/entrada-inventario";
 
 @Component({
   standalone: true,
@@ -28,11 +30,21 @@ export default class ProductosComponent implements OnInit{
   router=              inject(Router)
 
   productoSelected?:Producto;
-  bodega?:          Bodega;
+  bodega:           Bodega={} as Bodega;
+  proveedor:        Proveedor={} as Proveedor;
   listaProveedores: Proveedor[] =[];
   listaProductos:   Producto[] =[];
+  listaProductoBod: ProductoAlmacen[]=[]
+
+  barraNueva:       string=''
+  descripcionNueva: string =''
 
   cantidad:      number = 0;
+  costo:         number = 0.00;
+  precio1:       number = 0.00;
+  precio2:       number = 0.00;
+  precio3:       number = 0.00;
+
   nombreOBarra:   string=''
   titulo:        string='Producto no encontrado desea agregarlo'
   nombreBodega?: string
@@ -58,11 +70,13 @@ export default class ProductosComponent implements OnInit{
           this.cleanInputs()
         }else{
           this.modalConfirmacion=true
+          this.barraNueva=this.nombreOBarra
           this.cleanInputs()
         }
       },
       error => {
         this.modalConfirmacion=true
+        this.barraNueva=this.nombreOBarra
         this.cleanInputs()
       }
     )
@@ -86,10 +100,6 @@ export default class ProductosComponent implements OnInit{
         }
       })
     }
-
-  }
-
-  agregarProductoNuevo(){
 
   }
 
@@ -126,14 +136,6 @@ export default class ProductosComponent implements OnInit{
     }
   }
 
-  formatInput() {
-    if (this.cantidad !== null && this.cantidad !== undefined) {
-      // Limitar a 2 decimales
-      this.cantidad = parseFloat(this.cantidad.toFixed(2));
-      console.log(this.cantidad)
-    }
-  }
-
   formatInputNumber() {
     if (this.cantidad !== null && this.cantidad !== undefined) {
       // Asegúrate de que sea un entero
@@ -144,6 +146,10 @@ export default class ProductosComponent implements OnInit{
 
   cleanInputs(){
     this.cantidad=0;
+    this.costo=0;
+    this.precio1=0;
+    this.precio2=0;
+    this.precio3=0;
     this.nombreOBarra=''
   }
 
@@ -168,4 +174,45 @@ export default class ProductosComponent implements OnInit{
       this.productoSelected=undefined;
     })
   }
+
+  guardarProductoNuevo(){
+    if (this.descripcionNueva === '' && this.barraNueva === '' && this.costo ===0 && this.precio1===0 && this.precio2===0 && this.precio3===0 && this.cantidad===0 ){
+      this.toastr.warning('llene los campos')
+      return;
+    }
+    const productoNuevo: Producto ={
+      id:0,
+      descripcion:this.descripcionNueva,
+      barra:this.barraNueva,
+      costo:this.costo,
+      precio1:this.precio1,
+      precio2:this.precio2,
+      precio3:this.precio3
+    }
+    this.productoService.crear(productoNuevo).subscribe(
+      producto => {
+        this.productoSelected=producto
+        this.agregarInventario(producto)
+      }
+    )
+  }
+
+  agregarInventario(producto:Producto){
+    const entradaInventario: EntradaInventario ={
+      id:0,
+      producto:producto,
+      proveedor:this.proveedor,
+      bodega:this.bodega,
+      cantidad:this.cantidad,
+      fecha: new Date()
+
+    }
+    this.inventarioService.agregarProducto(entradaInventario).subscribe(
+      data => {
+        this.toastr.success("registro inventario.")
+        this.cerrarModal()
+      }
+    )
+  }
+
 }

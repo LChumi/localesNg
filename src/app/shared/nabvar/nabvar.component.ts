@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {NgOptimizedImage} from "@angular/common";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-nabvar',
@@ -17,6 +17,7 @@ export class NabvarComponent implements OnInit  {
   menuAbierto:    boolean = false;
   navbarAbierto:  boolean = false;
   username: any;
+  router=inject(Router);
 
   mostrarMenu(){
     this.menuAbierto=!this.menuAbierto
@@ -25,6 +26,9 @@ export class NabvarComponent implements OnInit  {
     this.navbarAbierto=!this.navbarAbierto
   }
   logout(){
+    sessionStorage.clear();
+    localStorage.clear();
+    this.router.navigate(['/bar', 'auth', 'login'])
   }
 
   ngOnInit(): void {

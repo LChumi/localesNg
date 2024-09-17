@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import {UserRequest} from "../../../core/models/auth/user-request";
+import {UsuarioService} from "../../../core/services/usuario.service";
 
 @Component({
   standalone: true,
@@ -32,7 +33,7 @@ export default class LoginComponent implements OnInit {
     if(this.loginForm.invalid){
       return
     }
-    const  usuario= this.loginForm.get('usuario')?.value;
+    const usuario= this.loginForm.get('usuario')?.value;
     const password= this.loginForm.get('password')?.value;
     const loginData: UserRequest = {
       username:usuario,
@@ -42,7 +43,7 @@ export default class LoginComponent implements OnInit {
     this.authService.login(loginData).subscribe(
       user => {
         sessionStorage.setItem("username",user.username)
-        this.goToAlmacen()
+        this.goToAlmacen(user.username)
       },
       error => {
         this.loginForm.reset()
@@ -50,9 +51,15 @@ export default class LoginComponent implements OnInit {
     )
   }
 
-  goToAlmacen(){
+  goToAlmacen(username:string){
     this.loginForm.reset();
-    this.router.navigate(['/bar', 'user' , 'almacenes'])
+    if (/admin/.test(username)){
+      this.router.navigate(['/bar', 'admin', 'dashboard'])
+    }else {
+      this.router.navigate(['/bar', 'user' , 'almacenes'])
+    }
   }
+
+
 
 }

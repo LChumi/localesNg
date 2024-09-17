@@ -51,6 +51,11 @@ export const routes: Routes = [
             loadComponent: () => import('./views/admin/usuarios/usuarios.component')
           },
           {
+            path: 'clientes',
+            title: 'Clientes',
+            loadComponent: () => import('./views/admin/clientes/clientes.component')
+          },
+          {
             path: 'almacenes',
             title: 'Almacenes',
             loadComponent: () => import('./views/admin/almacenes/almacenes.component')
@@ -79,7 +84,9 @@ export const routes: Routes = [
             path: 'ventas',
             title: 'Ventas',
             loadComponent: () => import('./views/admin/ventas/ventas.component')
-          }
+          },
+          {path: '', redirectTo: 'dashboard',pathMatch: 'full'},
+          {path: '**', redirectTo: 'dashboard',pathMatch: 'full'},
         ]
       }
     ]

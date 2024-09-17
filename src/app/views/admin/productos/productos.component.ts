@@ -77,11 +77,13 @@ export default class ProductosComponent {
           this.cleanInputs()
         }else{
           this.modalConfirmacion=true
+          this.barraNueva=this.nombreOBarra
           this.cleanInputs()
         }
       },
       error => {
         this.modalConfirmacion=true
+        this.barraNueva=this.nombreOBarra
         this.cleanInputs()
       }
     )
@@ -173,13 +175,6 @@ export default class ProductosComponent {
     this.modalListaProductos=false
   }
 
-  goToAlmacen(){
-    this.router.navigate(['/bar', 'user', 'almacenes']).then(r =>{
-      this.cleanInputs()
-      this.productoSelected=undefined;
-    })
-  }
-
   guardarProductoNuevo(){
     if (this.descripcionNueva === '' && this.barraNueva === '' && this.costo ===0 && this.precio1===0 && this.precio2===0 && this.precio3===0 && this.cantidad===0 ){
       this.toastr.warning('llene los campos')
@@ -230,9 +225,5 @@ export default class ProductosComponent {
 
   guardarProducto(){
     this.guardarProductoNuevo()
-  }
-
-  mostarVistaIngresoProducto(){
-
   }
 }

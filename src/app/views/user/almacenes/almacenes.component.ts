@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ModalConfirmacionComponent } from '../../../components/modal-confirmacion/modal-confirmacion.component';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { Bodega } from '../../../core/models/bodega';
+import {Router} from "@angular/router";
 
 @Component({
   standalone: true,
@@ -13,6 +14,7 @@ import { Bodega } from '../../../core/models/bodega';
 export default class AlmacenesComponent implements OnInit{
 
   userService = inject(UsuarioService)
+  router= inject(Router)
 
   listaBodegas: Bodega[]=[]
 
@@ -20,6 +22,10 @@ export default class AlmacenesComponent implements OnInit{
   bodegaSelecionada!: string;
 
   ngOnInit(): void {
+    const username = sessionStorage.getItem("username") ?? '';
+    if (username === ''){
+      this.logout();
+    }
       this.cargarBodegas()
       this.obtenerIdUsario()
   }
@@ -52,6 +58,10 @@ export default class AlmacenesComponent implements OnInit{
         }
       })
     }
+  }
+
+  logout(){
+    this.router.navigate(['/bar', 'auth', 'login'])
   }
 
 }

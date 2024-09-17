@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MovimientoInventario } from '../models/movimiento-inventario';
+import {Venta} from "../models/venta";
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +24,16 @@ export class ReporteService {
       params: {fechaInicial:fechaInicio, fechaFin:fechaFin}
     }
     return this.http.get<MovimientoInventario[]>(`${this.base_url}lista-movimientos-fechas`,params)
+  }
+
+  ventasDia():Observable<Venta[]>{
+    return this.http.get<Venta[]>(`${this.base_url}ventas-actuales`)
+  }
+
+  ventasEntreFecha(fechaInicio:string, fechaFin:string):Observable<Venta[]>{
+    const params = {
+      params: {fechaInicial:fechaInicio, fechaFin:fechaFin}
+    }
+    return this.http.get<Venta[]>(`${this.base_url}ventas`,params)
   }
 }

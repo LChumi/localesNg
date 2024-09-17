@@ -4,6 +4,7 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 import {VentaService} from "../../../core/services/venta.service";
 import {UsuarioService} from "../../../core/services/usuario.service";
 import {ProductoService} from "../../../core/services/producto.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ export default class DashboardComponent implements OnInit{
   ventaService=inject(VentaService);
   usuarioService=inject(UsuarioService);
   productoService=inject(ProductoService)
+  router= inject(Router)
 
   usuariosCount:     number = 0;
   cargaTarjeta:      boolean = false;
@@ -26,6 +28,10 @@ export default class DashboardComponent implements OnInit{
   totalProductos:    number =0;
 
   ngOnInit(): void {
+    const username = sessionStorage.getItem("username") ?? '';
+    if (username === ''){
+      this.logout();
+    }
     this.getNroComprobantes()
     this.getNroUsuarios()
     this.getProdcutos()
@@ -78,6 +84,10 @@ export default class DashboardComponent implements OnInit{
   }
   getSanitiedSvgDinero(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.svgDinero)
+  }
+
+  logout(){
+    this.router.navigate(['/bar', 'auth', 'login'])
   }
 
   routerLinkComprobnates: any = ['/bar', 'admin', 'inventarios']

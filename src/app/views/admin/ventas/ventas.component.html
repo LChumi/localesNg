@@ -1,1 +1,130 @@
-<p>ventas works!</p>
+<section>
+  <section class="dark:bg-gray-700 bg-white py-9 relative">
+    <span></span>
+    <div class="container mx-auto px-4">
+      <!-- Flecha de regreso -->
+      <div class="border-blue-600 border-l-4 pl-5 mb-8">
+        <h2 class="text-2xl font-semibold text-black dark:text-white mb-2">
+          Ventas
+        </h2>
+        <p class="text-sm font-medium text-black dark:text-gray-400">
+          Lista de ventas
+        </p>
+      </div>
+    </div>
+  </section>
+  <div>
+    <section>
+      <div class="px-4 py-4 card card-compact">
+        <div class="card-body grid grid-cols-3 gap-3 lg:grid-cols-4 lg:gap-8">
+          <form>
+            <label for="fecha" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
+            <input type="date" id="fecha" name="fechaInicio" [(ngModel)]="fechaInicio"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:border-gray-600 dark:placeholder:-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   (change)="formatearFechaInicio()">
+          </form>
+          <form>
+            <label for="fechaFin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha Fin </label>
+            <input type="date" id="fechaFin" name="fechaFin" [(ngModel)]="fechaFin"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:border-gray-600 dark:placeholder:-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   (change)="formatearFechaFin()">
+          </form>
+          <div class="flex justify-center items-center">
+            <div class="flex items-center">
+              <button type="button" (click)="buscar()"
+                      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded flex items-center gap-2 ">
+                <svg class="w-7 h-7 text-gray-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                     width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                        d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                </svg>
+                <span>Buscar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="p-6 bg-gray-50 dark:bg-gray-800">
+    <div class="overflow-x-auto py-4">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-separate border-spacing-0">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Fecha</th>
+          <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Total</th>
+          <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Cliente</th>
+          <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Usuario</th>
+          <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Forma de Pago</th>
+          <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Finalizado</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+          @for (venta of listaVenta; track venta.id) {
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700" (click)="detalles(venta)">
+              <td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700">{{venta.fecha || 'Fecha'}}</td>
+              <td class="px-6 py-4 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">{{venta.total || '0'}}</td>
+              <td class="px-6 py-4 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">{{venta?.cliente?.nombre || ' '}} {{venta?.cliente?.apellido || ''}}</td>
+              <td class="px-6 py-4 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">{{venta?.usuario?.nombreUsuario || ' '}}</td>
+              <td class="px-6 py-4 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">{{venta.formaPago || ' '}}</td>
+              <td class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <input type="checkbox" [checked]="venta.estado" disabled class="form-checkbox text-blue-600" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  @if (vistaDetalles && ventaSelect ){
+    <div id="new-usuario-modal" [class.hidden]="!vistaDetalles" tabindex="-1" aria-hidden="true"
+         class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg max-w-md w-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              Vista Detalles
+            </h3>
+            <button type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-toggle="new-usuario-modal" (click)="vistaDetalles=false">
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+              </svg>
+              <span class="sr-only">Cerrar</span>
+            </button>
+          </div>
+          <!--Modal body-->
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="p-4">Producto</th>
+                <th scope="col" class="px-6 py-3">Cantidad</th>
+                <th scope="col" class="px-6 py-3">Precio Uni</th>
+                <th scope="col" class="px-6 py-3">Subtotal</th>
+                <th scope="col" class="px-6 py-3">Tipo Precio</th>
+                <th scope="col" class="px-6 py-3">Bodega</th>
+              </tr>
+              </thead>
+              <tbody>
+                @if (ventaSelect.detalles){
+                  @for (detalle of ventaSelect.detalles; track $index){
+                    <tr class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{detalle.producto?.descripcion || ''}}</th>
+                      <th scope="col" class="px-4 py-2">{{detalle.cantidad}}</th>
+                      <th scope="col" class="px-4 py-2">{{detalle.precioUnitario}}</th>
+                      <th scope="col" class="px-4 py-2">{{detalle.subtotal}}</th>
+                      <th scope="col" class="px-4 py-2">{{detalle.tipoPrecio}}</th>
+                      <th scope="col" class="px-4 py-2">{{detalle.bodega?.nombre}}</th>
+                      }
+                }
+              </tbody>
+            </table>
+          </div>
+          </div>
+      </div>
+    </div>
+  }
+</section>
