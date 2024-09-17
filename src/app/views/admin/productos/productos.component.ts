@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {ModalConfirmacionYnComponent} from "../../../components/modal-confirmacion-yn/modal-confirmacion-yn.component";
 import {DecimalPipe, NgForOf} from "@angular/common";
@@ -13,6 +13,8 @@ import {Bodega} from "../../../core/models/bodega";
 import {Proveedor} from "../../../core/models/proveedor";
 import {EntradaInventario} from "../../../core/models/entrada-inventario";
 import {ProductoAlmacen} from "../../../core/models/productoAlmacen";
+import {UsuarioService} from "../../../core/services/usuario.service";
+import {Usuario} from "../../../core/models/ususario";
 
 @Component({
   selector: 'app-productos',
@@ -26,8 +28,9 @@ import {ProductoAlmacen} from "../../../core/models/productoAlmacen";
   templateUrl: './productos.component.html',
   styles: ``
 })
-export default class ProductosComponent {
+export default class ProductosComponent implements OnInit{
   productoService =   inject(ProductoService)
+  usuarioService =    inject(UsuarioService)
   proveedorService =  inject(ProveedorService)
   bodegaService=      inject(BodegaService);
   inventarioService=  inject(EntradaInventarioService);
@@ -35,11 +38,14 @@ export default class ProductosComponent {
   router=              inject(Router)
 
   productoSelected?:Producto;
+  bodegaSelected?:  Bodega;
   bodega:           Bodega={} as Bodega;
   proveedor:        Proveedor={} as Proveedor;
+  usuario:          Usuario={} as Usuario;
   listaProveedores: Proveedor[] =[];
   listaProductos:   Producto[] =[];
   listaProductoBod: ProductoAlmacen[]=[]
+  listaBodegas:     Bodega[]=[]
 
   barraNueva:       string=''
   descripcionNueva: string =''
@@ -52,7 +58,6 @@ export default class ProductosComponent {
 
   nombreOBarra:   string=''
   titulo:        string='Producto no encontrado desea agregarlo'
-  nombreBodega?: string
 
   mostrarModal:        boolean = false;
   modalConfirmacion:   boolean = false;
@@ -64,8 +69,9 @@ export default class ProductosComponent {
 
   ngOnInit(): void {
     this.listarProveedores()
-    this.bodegaSelected()
     this.listarProductos()
+    this.listarBodegas()
+    this.obtenerIdUsario()
   }
 
   buscarPorNombreOBarra(): void {
@@ -89,13 +95,10 @@ export default class ProductosComponent {
     )
   }
 
-  agregarStockProducto(){
-    const bodId = this.bodega?.id;
-    const productosId = this.productoSelected?.id;
+  agregarStockProducto(p:Producto, b:Bodega){
     const  userId = Number(sessionStorage.getItem('userId'));
-    if (bodId && productosId && userId){
-      console.log(bodId, productosId, this.cantidad, userId)
-      this.inventarioService.incrementarStock(productosId,bodId,this.cantidad,userId).subscribe({
+    if (b.id && p.id && userId){
+      this.inventarioService.incrementarStock(p.id,b.id,this.cantidad,userId).subscribe({
         next: (data) => {
           this.cleanInputs();
           this.toastr.success(data)
@@ -119,18 +122,6 @@ export default class ProductosComponent {
         this.listaProveedores = [];
       }
     )
-  }
-
-  bodegaSelected(){
-    const bodegaId = sessionStorage.getItem('bodegaId');
-    if (bodegaId){
-      this.bodegaService.porId(Number(bodegaId)).subscribe(
-        bod => {
-          this.bodega=bod;
-          this.nombreBodega=bod.nombre
-        }
-      )
-    }
   }
 
   respuestaConfirmacion(confirmado: boolean){
@@ -169,9 +160,10 @@ export default class ProductosComponent {
     this.productoSelected=undefined;
   }
 
-  productoEscogido(producto:Producto){
+  productoEscogido(producto:Producto,bodega:Bodega){
     this.modalProductoSelct=true
     this.productoSelected=producto
+    this.bodegaSelected=bodega
     this.modalListaProductos=false
   }
 
@@ -204,8 +196,8 @@ export default class ProductosComponent {
       proveedor:this.proveedor,
       bodega:this.bodega,
       cantidad:this.cantidad,
-      fecha: new Date()
-
+      fecha: new Date(),
+      usuario: this.usuario,
     }
     this.inventarioService.agregarProducto(entradaInventario).subscribe(
       data => {
@@ -223,7 +215,28 @@ export default class ProductosComponent {
     )
   }
 
+  listarBodegas(){
+    this.bodegaService.listar().subscribe(
+      bodegas=>{
+        console.log(bodegas)
+        this.listaBodegas=bodegas
+      }
+    )
+  }
+
   guardarProducto(){
     this.guardarProductoNuevo()
+  }
+
+  obtenerIdUsario(){
+    const username = sessionStorage.getItem("username");
+    if (username){
+      this.usuarioService.porUsername(username).subscribe({
+        next: (user) => {
+          console.log(user.nombre)
+          this.usuario = user;
+        }
+      })
+    }
   }
 }

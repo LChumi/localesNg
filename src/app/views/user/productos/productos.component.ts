@@ -11,8 +11,9 @@ import {Bodega} from "../../../core/models/bodega";
 import {EntradaInventarioService} from "../../../core/services/entrada-inventario.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
-import {ProductoAlmacen} from "../../../core/models/productoAlmacen";
 import {EntradaInventario} from "../../../core/models/entrada-inventario";
+import {UsuarioService} from "../../../core/services/usuario.service";
+import {Usuario} from "../../../core/models/ususario";
 
 @Component({
   standalone: true,
@@ -28,13 +29,14 @@ export default class ProductosComponent implements OnInit{
   inventarioService=  inject(EntradaInventarioService);
   toastr=             inject(ToastrService)
   router=              inject(Router)
+  usuarioService =    inject(UsuarioService)
 
   productoSelected?:Producto;
   bodega:           Bodega={} as Bodega;
   proveedor:        Proveedor={} as Proveedor;
+  usuario:          Usuario={} as Usuario;
   listaProveedores: Proveedor[] =[];
   listaProductos:   Producto[] =[];
-  listaProductoBod: ProductoAlmacen[]=[]
 
   barraNueva:       string=''
   descripcionNueva: string =''
@@ -59,6 +61,7 @@ export default class ProductosComponent implements OnInit{
   ngOnInit(): void {
     this.listarProveedores()
     this.bodegaSelected()
+    this.obtenerIdUsario()
   }
 
   buscarPorNombreOBarra(): void {
@@ -204,8 +207,8 @@ export default class ProductosComponent implements OnInit{
       proveedor:this.proveedor,
       bodega:this.bodega,
       cantidad:this.cantidad,
-      fecha: new Date()
-
+      fecha: new Date(),
+      usuario: this.usuario,
     }
     this.inventarioService.agregarProducto(entradaInventario).subscribe(
       data => {
@@ -213,6 +216,18 @@ export default class ProductosComponent implements OnInit{
         this.cerrarModal()
       }
     )
+  }
+
+  obtenerIdUsario(){
+    const username = sessionStorage.getItem("username");
+    if (username){
+      this.usuarioService.porUsername(username).subscribe({
+        next: (user) => {
+          console.log(user.nombre)
+          this.usuario = user;
+        }
+      })
+    }
   }
 
 }

@@ -5,6 +5,8 @@ import {VentaService} from "../../../core/services/venta.service";
 import {UsuarioService} from "../../../core/services/usuario.service";
 import {ProductoService} from "../../../core/services/producto.service";
 import {Router} from "@angular/router";
+import {ProveedorService} from "../../../core/services/proveedor.service";
+import {ClienteService} from "../../../core/services/cliente.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -19,12 +21,15 @@ export default class DashboardComponent implements OnInit{
   ventaService=inject(VentaService);
   usuarioService=inject(UsuarioService);
   productoService=inject(ProductoService)
+  proveedorService=inject(ProveedorService)
+  clientesService=inject(ClienteService);
   router= inject(Router)
 
-  usuariosCount:     number = 0;
   cargaTarjeta:      boolean = false;
   totales:           number = 0;
   totalUsuarios:     number =0;
+  totalClientes:     number =0;
+  totalProveedores:  number =0;
   totalProductos:    number =0;
 
   ngOnInit(): void {
@@ -35,9 +40,13 @@ export default class DashboardComponent implements OnInit{
     this.getNroComprobantes()
     this.getNroUsuarios()
     this.getProdcutos()
+    this.getNroClientes()
+    this.getNroProveedores()
     this.svgUsuario = this.getSanitiedSvgUsuario();
     this.svgComprobante = this.getSanitiedSvgComprobante();
     this.svgDinero = this.getSanitiedSvgDinero();
+    this.svgProveedor= this.getSanitiedSvgProveedor();
+    this.svgCliente= this.getSanitiedSvgClientes();
   }
 
   getNroComprobantes(){
@@ -54,6 +63,22 @@ export default class DashboardComponent implements OnInit{
     this.usuarioService.listar().subscribe(
       listaUsuarios => {
         this.totalUsuarios = listaUsuarios.length;
+      }
+    )
+  }
+
+  getNroProveedores(){
+    this.proveedorService.listar().subscribe(
+      proveedors => {
+        this.totalProveedores = proveedors.length;
+      }
+    )
+  }
+
+  getNroClientes(){
+    this.clientesService.listar().subscribe(
+      clientes=>{
+        this.totalClientes=clientes.length
       }
     )
   }
@@ -75,6 +100,14 @@ export default class DashboardComponent implements OnInit{
   svgDinero: any = `<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17.345a4.76 4.76 0 0 0 2.558 1.618c2.274.589 4.512-.446 4.999-2.31.487-1.866-1.273-3.9-3.546-4.49-2.273-.59-4.034-2.623-3.547-4.488.486-1.865 2.724-2.899 4.998-2.31.982.236 1.87.793 2.538 1.592m-3.879 12.171V21m0-18v2.2"/>
 </svg>`
+  svgProveedor: any =`<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M4.5 17H4a1 1 0 0 1-1-1 3 3 0 0 1 3-3h1m0-3.05A2.5 2.5 0 1 1 9 5.5M19.5 17h.5a1 1 0 0 0 1-1 3 3 0 0 0-3-3h-1m0-3.05a2.5 2.5 0 1 0-2-4.45m.5 13.5h-7a1 1 0 0 1-1-1 3 3 0 0 1 3-3h3a3 3 0 0 1 3 3 1 1 0 0 1-1 1Zm-1-9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
+</svg>`
+
+  svgCliente: any = `<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z" clip-rule="evenodd"/>
+</svg>
+`
 
   getSanitiedSvgUsuario(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.svgUsuario)
@@ -85,6 +118,12 @@ export default class DashboardComponent implements OnInit{
   getSanitiedSvgDinero(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.svgDinero)
   }
+  getSanitiedSvgProveedor(): SafeHtml{
+    return this.sanitizer.bypassSecurityTrustHtml(this.svgProveedor)
+  }
+  getSanitiedSvgClientes(): SafeHtml{
+    return this.sanitizer.bypassSecurityTrustHtml(this.svgCliente)
+  }
 
   logout(){
     this.router.navigate(['/bar', 'auth', 'login'])
@@ -92,4 +131,7 @@ export default class DashboardComponent implements OnInit{
 
   routerLinkComprobnates: any = ['/bar', 'admin', 'inventarios']
   routerLinkUsuarios: any = ['/bar', 'admin', 'usuarios']
+  routerLinkProveedores: any = ['/bar', 'admin', 'proveedores']
+  routerLinkProductos: any = ['/bar', 'admin', 'productos']
+  routerLinkClientes: any = ['/bar', 'admin', 'clientes']
 }

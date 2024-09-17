@@ -23,7 +23,23 @@
         [valor]="totalProductos"
         aLink='Ver Comprobantes'
         [svgIcon]="svgComprobante"
-        [routerLink]="routerLinkUsuarios">
+        [routerLink]="routerLinkProductos">
+      </app-tarjetas>
+
+      <app-tarjetas
+        [titulo]="'Clientes '"
+        [valor]="totalClientes"
+        aLink='Ver Comprobantes'
+        [svgIcon]="svgCliente"
+        [routerLink]="routerLinkClientes">
+      </app-tarjetas>
+
+      <app-tarjetas
+        [titulo]="'Proveedores '"
+        [valor]="totalProveedores"
+        aLink='Ver Comprobantes'
+        [svgIcon]="svgProveedor"
+        [routerLink]="routerLinkProveedores">
       </app-tarjetas>
     }
 
