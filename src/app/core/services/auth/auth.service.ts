@@ -21,6 +21,4 @@ export class AuthService {
     return this.http.post<UserRequest>(`${this.baseUrl}login`,user)
   }
 
-
-
 }
