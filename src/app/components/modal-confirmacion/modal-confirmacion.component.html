@@ -6,12 +6,12 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
-      
-        <p class="mb-4">¿Ud va a ingresar a {{ storeSelected()}}?</p>
+
+        <p class="mb-4 font-semibold text-black">¿Ud va a ingresar a {{ storeSelected()}}?</p>
       <div class="flex gap-4">
         <button (click)="opcionSelected = 'ventas'; confirmarOpcion();" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Ventas</button>
         <button (click)="opcionSelected = 'ingreso-productos'; confirmarOpcion();" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">Ingreso de Productos</button>
       </div>
     </div>
   </div>
-  
+

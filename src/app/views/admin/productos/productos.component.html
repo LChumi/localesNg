@@ -71,50 +71,6 @@
         </div>
       }
 
-      @if(modalProductoSelct) {
-        <!-- Mostrar información del producto -->
-        <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
-          <button
-            class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            (click)="modalListaProductos=false"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-          @if (productoSelected && bodegaSelected){
-            <div class="mt-8 p-6 rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
-              <h3 class="text-lg font-semibold text-black dark:text-white mb-4">Información del Producto</h3>
-              <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Descripción:</strong> {{ productoSelected.descripcion }}</p>
-              <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Código de Barras:</strong> {{ productoSelected.descripcion }}</p>
-              <p class="text-md text-gray-700 dark:text-gray-300 mb-4"><strong>Precio:</strong> {{ productoSelected.precio1 }}</p>
-              <!-- Input para cantidad -->
-              <div class="mb-4">
-                <label for="cantidad" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
-                  Cantidad
-                </label>
-                <input
-                  type="number"
-                  id="cantidad"
-                  placeholder=0
-                  [(ngModel)]="cantidad"
-                  class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
-                  autocomplete="off"
-                  step="1"
-                  min="0"
-                >
-              </div>
-
-              <button (click)="agregarStockProducto(productoSelected,bodegaSelected)" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
-                Agregar Producto
-              </button>
-            </div>
-          }
-        </div>
-        </div>
-      }
-
       <!-- Modal para agregar nuevo producto -->
       @if (mostrarModal){
         <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
@@ -340,6 +296,50 @@
         </table>
       </div>
     </section>
+  }
+
+  @if(modalProductoSelct) {
+    <!-- Mostrar información del producto -->
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
+        <button
+          class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+          (click)="cerrarProductoSelct()"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        @if (productoSelected && bodegaSelected){
+          <div class="mt-8 p-6 rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800">
+            <h3 class="text-lg font-semibold text-black dark:text-white mb-4">Información del Producto</h3>
+            <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Descripción:</strong> {{ productoSelected.descripcion }}</p>
+            <p class="text-md text-gray-700 dark:text-gray-300 mb-2"><strong>Código de Barras:</strong> {{ productoSelected.descripcion }}</p>
+            <p class="text-md text-gray-700 dark:text-gray-300 mb-4"><strong>Precio:</strong> {{ productoSelected.precio1 }}</p>
+            <!-- Input para cantidad -->
+            <div class="mb-4">
+              <label for="cantidad" class="block text-base font-medium text-gray-700 dark:text-gray-200 mb-2">
+                Cantidad
+              </label>
+              <input
+                type="number"
+                id="cantidad"
+                placeholder=0
+                [(ngModel)]="cantidad"
+                class="w-full bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600 py-2 px-4 text-gray-900 dark:text-gray-100 outline-none transition focus:border-blue-500 dark:focus:border-blue-300"
+                autocomplete="off"
+                step="1"
+                min="0"
+              >
+            </div>
+
+            <button (click)="agregarStockProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
+              Agregar Producto
+            </button>
+          </div>
+        }
+      </div>
+    </div>
   }
 
   @if (modalConfirmacion){

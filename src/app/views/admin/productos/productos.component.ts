@@ -39,8 +39,8 @@ export default class ProductosComponent implements OnInit{
 
   productoSelected?:Producto;
   bodegaSelected?:  Bodega;
-  bodega:           Bodega={} as Bodega;
-  proveedor:        Proveedor={} as Proveedor;
+  bodega:           Bodega | null=null;
+  proveedor:        Proveedor | null = null;
   usuario:          Usuario={} as Usuario;
   listaProveedores: Proveedor[] =[];
   listaProductos:   Producto[] =[];
@@ -95,10 +95,9 @@ export default class ProductosComponent implements OnInit{
     )
   }
 
-  agregarStockProducto(p:Producto, b:Bodega){
-    const  userId = Number(sessionStorage.getItem('userId'));
-    if (b.id && p.id && userId){
-      this.inventarioService.incrementarStock(p.id,b.id,this.cantidad,userId).subscribe({
+  agregarStockProducto(){
+    if (this.bodegaSelected && this.productoSelected && this.usuario.id){
+      this.inventarioService.incrementarStock(this.productoSelected.id,this.bodegaSelected.id,this.cantidad,this.usuario.id).subscribe({
         next: (data) => {
           this.cleanInputs();
           this.toastr.success(data)
@@ -110,7 +109,6 @@ export default class ProductosComponent implements OnInit{
         }
       })
     }
-
   }
 
   listarProveedores(){
@@ -134,14 +132,6 @@ export default class ProductosComponent implements OnInit{
     }
   }
 
-  formatInputNumber() {
-    if (this.cantidad !== null && this.cantidad !== undefined) {
-      // Asegúrate de que sea un entero
-      this.cantidad = Math.floor(Number(this.cantidad));
-      console.log(this.cantidad);
-    }
-  }
-
   cleanInputs(){
     this.cantidad=0;
     this.costo=0;
@@ -158,18 +148,31 @@ export default class ProductosComponent implements OnInit{
   cerrarProductoSelct(){
     this.modalProductoSelct=false
     this.productoSelected=undefined;
+    this.listarProductos()
   }
 
   productoEscogido(producto:Producto,bodega:Bodega){
     this.modalProductoSelct=true
     this.productoSelected=producto
     this.bodegaSelected=bodega
-    this.modalListaProductos=false
   }
 
   guardarProductoNuevo(){
-    if (this.descripcionNueva === '' && this.barraNueva === '' && this.costo ===0 && this.precio1===0 && this.precio2===0 && this.precio3===0 && this.cantidad===0 ){
-      this.toastr.warning('llene los campos')
+    if (!this.proveedor || !this.bodega) {
+      this.toastr.warning('Seleccione un proveedor y una bodega');
+      return;
+    }
+
+    if (
+      this.descripcionNueva === '' ||
+      this.barraNueva === '' ||
+      this.costo === 0 ||
+      this.precio1 === 0 ||
+      this.precio2 === 0 ||
+      this.precio3 === 0 ||
+      this.cantidad === 0
+    ) {
+      this.toastr.warning('Llene todos los campos obligatorios');
       return;
     }
     const productoNuevo: Producto ={
@@ -190,6 +193,10 @@ export default class ProductosComponent implements OnInit{
   }
 
   agregarInventario(producto:Producto){
+    if (!this.proveedor || !this.bodega) {
+      this.toastr.warning('Seleccione un proveedor y una bodega');
+      return;
+    }
     const entradaInventario: EntradaInventario ={
       id:0,
       producto:producto,
@@ -218,7 +225,6 @@ export default class ProductosComponent implements OnInit{
   listarBodegas(){
     this.bodegaService.listar().subscribe(
       bodegas=>{
-        console.log(bodegas)
         this.listaBodegas=bodegas
       }
     )
@@ -233,7 +239,6 @@ export default class ProductosComponent implements OnInit{
     if (username){
       this.usuarioService.porUsername(username).subscribe({
         next: (user) => {
-          console.log(user.nombre)
           this.usuario = user;
         }
       })
