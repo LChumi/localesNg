@@ -139,6 +139,7 @@ export default class ProductosComponent implements OnInit{
     this.precio2=0;
     this.precio3=0;
     this.nombreOBarra=''
+    this.descripcionNueva=''
   }
 
   cerrarModal(): void {
@@ -209,7 +210,8 @@ export default class ProductosComponent implements OnInit{
     this.inventarioService.agregarProducto(entradaInventario).subscribe(
       data => {
         this.toastr.success("registro inventario.")
-        this.cerrarModal()
+        this.cleanInputs()
+        this.gotoListproductos()
       }
     )
   }
@@ -232,6 +234,12 @@ export default class ProductosComponent implements OnInit{
 
   guardarProducto(){
     this.guardarProductoNuevo()
+  }
+
+  gotoListproductos(){
+    this.listarProductos()
+    this.mostrarModal=false;
+    this.ingresaqrProductos=false;
   }
 
   obtenerIdUsario(){
