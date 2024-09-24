@@ -39,7 +39,7 @@ export default class ProveedoresComponent implements OnInit {
       correoProv: '',
       direccionProv: '',
     })
-    this.proveedorForm = this.fb.group({
+    this.editProveedorForm = this.fb.group({
       nombre: ['', Validators.required],
       cedulaRuc: ['', Validators.required],
       telefono: '',

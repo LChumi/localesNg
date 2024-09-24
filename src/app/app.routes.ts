@@ -21,7 +21,6 @@ export const routes: Routes = [
       {
         path:'user',
         loadComponent: () => import('./layouts/user/user.component'),
-        canActivateChild:[authGuard],
         children:[
           {
             path: 'almacenes',
