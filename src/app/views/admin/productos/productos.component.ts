@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {FormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ModalConfirmacionYnComponent} from "../../../components/modal-confirmacion-yn/modal-confirmacion-yn.component";
 import {DecimalPipe, NgForOf} from "@angular/common";
 import {ProductoService} from "../../../core/services/producto.service";
@@ -23,7 +23,8 @@ import {Usuario} from "../../../core/models/ususario";
     FormsModule,
     ModalConfirmacionYnComponent,
     NgForOf,
-    DecimalPipe
+    DecimalPipe,
+    ReactiveFormsModule
   ],
   templateUrl: './productos.component.html',
   styles: ``
@@ -36,6 +37,7 @@ export default class ProductosComponent implements OnInit{
   inventarioService=  inject(EntradaInventarioService);
   toastr=             inject(ToastrService)
   router=              inject(Router)
+  fb= inject(FormBuilder)
 
   productoSelected?:Producto;
   bodegaSelected?:  Bodega;
@@ -64,6 +66,9 @@ export default class ProductosComponent implements OnInit{
   modalListaProductos: boolean = false;
   modalProductoSelct:  boolean = false;
   ingresaqrProductos:  boolean = false;
+  modalEditarProducto: boolean = false;
+
+  productoForm!: FormGroup;
 
   constructor() {}
 
@@ -72,6 +77,14 @@ export default class ProductosComponent implements OnInit{
     this.listarProductos()
     this.listarBodegas()
     this.obtenerIdUsario()
+    this.productoForm = this.fb.group({
+      barraP: ['', Validators.required],
+      descripcionP: ['', Validators.required],
+      costoP: ['', Validators.required],
+      precioP1: ['', Validators.required],
+      precioP2: ['', Validators.required],
+      precioP3: ['', Validators.required],
+    })
   }
 
   buscarPorNombreOBarra(): void {
@@ -156,6 +169,19 @@ export default class ProductosComponent implements OnInit{
     this.modalProductoSelct=true
     this.productoSelected=producto
     this.bodegaSelected=bodega
+  }
+
+  editarProducto(prod:Producto){
+    this.productoSelected=prod
+    this.modalEditarProducto=true
+    this.productoForm.patchValue({
+      barraP:prod.barra,
+      descripcionP: prod.descripcion,
+      costoP: prod.costo,
+      precioP1: prod.precio1,
+      precioP2: prod.precio2,
+      precioP3: prod.precio3
+    })
   }
 
   guardarProductoNuevo(){
@@ -250,6 +276,39 @@ export default class ProductosComponent implements OnInit{
           this.usuario = user;
         }
       })
+    }
+  }
+  editarProductoForm(){
+    if (this.productoForm.invalid){
+      this.toastr.warning('Llene  los campos del formulario')
+      return;
+    }
+    const barraValue = this.productoForm.get('barraP')?.value;
+    const descripcionValue = this.productoForm.get('descripcionP')?.value;
+    const costoValue= this.productoForm.get('costoP')?.value;
+    const precio1Value = this.productoForm.get('precioP1')?.value;
+    const precio2Value = this.productoForm.get('precioP2')?.value;
+    const precio3Value = this.productoForm.get('precioP3')?.value;
+
+    const descripcion = typeof descripcionValue === 'string' ? descripcionValue.toUpperCase() : descripcionValue;
+
+    const producto: Producto ={
+      id: 0,
+      barra:barraValue,
+      descripcion: descripcion,
+      costo: costoValue,
+      precio1:precio1Value,
+      precio2:precio2Value,
+      precio3:precio3Value
+    }
+    if (this.productoSelected){
+      this.productoService.actualizar(this.productoSelected.id, producto).subscribe(
+        data => {
+          console.log(data)
+          this.modalEditarProducto=false
+          this.listarProductos()
+        }
+      )
     }
   }
 }

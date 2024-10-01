@@ -261,6 +261,7 @@
             <th scope="col" class="px-6 py-3">Stock</th>
             <th scope="col" class="px-6 py-3">Almacen</th>
             <th scope="col" class="px-6 py-3">Agregar Stock</th>
+            <th scope="col" class="px-6 py-3">Editar Producto</th>
           </tr>
           </thead>
           <tbody>
@@ -274,7 +275,7 @@
                   {{producto.producto.descripcion || 'SN'}}
                 </td>
                 <th class="px-4 py-2">
-                  {{producto.producto?.barra || 'SN'}}
+                  {{producto.producto.barra || 'SN'}}
                 </th>
                 <td class="px-4 py-2">
                   {{producto.stock || '0'}}
@@ -285,8 +286,18 @@
                 <th scope="row" class="px-4 py-2">
                   <button title="Detalles" (click)="productoEscogido(producto.producto,producto.bodega)"
                           class="btn btn-ghost btn-xs bg-transparent rounded-2xl px-4 py-0">
-                    <svg class="w-6 h-6 text-blue-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                      <path fill-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm10 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-8-5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm1.942 4a3 3 0 0 0-2.847 2.051l-.044.133-.004.012c-.042.126-.055.167-.042.195.006.013.02.023.038.039.032.025.08.064.146.155A1 1 0 0 0 6 17h6a1 1 0 0 0 .811-.415.713.713 0 0 1 .146-.155c.019-.016.031-.026.038-.04.014-.027 0-.068-.042-.194l-.004-.012-.044-.133A3 3 0 0 0 10.059 14H7.942Z" clip-rule="evenodd"/>
+                    <svg class="w-6 h-6 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
+                    </svg>
+                  </button>
+                </th>
+                <th scope="row" class="px-4 py-2">
+                  <button title="Detalles" (click)="editarProducto(producto.producto)"
+                          class="btn btn-ghost btn-xs bg-transparent rounded-2xl px-4 py-0">
+                    <svg class="w-6 h-6 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
                     </svg>
                   </button>
                 </th>
@@ -340,6 +351,117 @@
         }
       </div>
     </div>
+  }
+
+  @if (modalEditarProducto){
+    <div id="new-usuario-modal" [class.hidden]="!modalEditarProducto" tabindex="-1" aria-hidden="true"
+         class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg max-w-md w-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              Editar Producto
+            </h3>
+            <button type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-toggle="new-usuario-modal" (click)="modalEditarProducto=false">
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+              </svg>
+              <span class="sr-only">Cerrar</span>
+            </button>
+          </div>
+          <form [formGroup]="productoForm" (ngSubmit)="editarProductoForm()" class="p-4 md:p-5">
+            <div class="grid gap-4 mb-4 grid-cols-2">
+              <div class="col-span-2">
+                <label for="barraP" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Barra</label>
+                <input
+                  type="text"
+                  name="barraP"
+                  id="barraP"
+                  formControlName="barraP"
+                  title="barraP"
+                  class="uppercase bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  placeholder="Barra"
+                  autocomplete="off"
+                  required="">
+              </div>
+            </div>
+            <div class="col-span-2">
+              <label for="descripcionP" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripcion</label>
+              <input
+                type="text"
+                name="descripcionP"
+                id="descripcionP"
+                formControlName="descripcionP"
+                title="CedulaRuc"
+                class="uppercase bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Descripcion"
+                autocomplete="off"
+                required="">
+            </div>
+            <div class="col-span-2">
+              <label for="costoP" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Costo</label>
+              <input
+                type="number"
+                name="costoP"
+                id="costoP"
+                formControlName="costoP"
+                title="CedulaRuc"
+                class="uppercase bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="0.00"
+                autocomplete="off"
+                required="">
+            </div>
+            <div class="col-span-2">
+              <label for="precioP1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio 1</label>
+              <input
+                type="number"
+                name="precioP1"
+                id="precioP1"
+                formControlName="precioP1"
+                title="Precio 1"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="0.00"
+                autocomplete="off">
+            </div>
+            <div class="col-span-2">
+              <label for="precioP2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio 2</label>
+              <input
+                type="number"
+                name="precioP2"
+                id="precioP2"
+                formControlName="precioP2"
+                title="Precio 2"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="0.00"
+                autocomplete="off">
+            </div>
+            <div class="col-span-2">
+              <label for="precioP3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio 3</label>
+              <input
+                type="number"
+                name="precioP3"
+                id="precioP3"
+                formControlName="precioP3"
+                title="Precio 3"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="0.00"
+                autocomplete="off">
+            </div>
+            <button type="submit"
+                    class="text-white inline-flex items-center bg-blue-300 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <svg class="w-6 h-6 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+              </svg>
+              Editar
+            </button>
+          </form>
+        </div>
+        </div>
+      </div>
   }
 
   @if (modalConfirmacion){

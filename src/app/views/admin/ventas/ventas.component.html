@@ -112,12 +112,16 @@
                 @if (ventaSelect.detalles){
                   @for (detalle of ventaSelect.detalles; track $index){
                     <tr class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                      <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{detalle.producto?.descripcion || ''}}</th>
+                      <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{detalle.producto.descripcion || ''}}</th>
                       <th scope="col" class="px-4 py-2">{{detalle.cantidad}}</th>
                       <th scope="col" class="px-4 py-2">{{detalle.precioUnitario}}</th>
                       <th scope="col" class="px-4 py-2">{{detalle.subtotal}}</th>
                       <th scope="col" class="px-4 py-2">{{detalle.tipoPrecio}}</th>
-                      <th scope="col" class="px-4 py-2">{{detalle.bodega?.nombre}}</th>
+                      @if (detalle.bodega){
+                        <th scope="col" class="px-4 py-2">{{detalle.bodega.nombre}}</th>
+                      } @else {
+                        <th scope="col" class="px-4 py-2"> </th>
+                      }
                       }
                 }
               </tbody>
