@@ -1,4 +1,5 @@
 <section class="dark:bg-gray-700 bg-white py-16 relative">
+
   @if (ingresaqrProductos){
     <div class="container mx-auto px-4">
       <!-- Flecha de regreso -->
@@ -56,13 +57,24 @@
                 <tr>
                   <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Descripción</th>
                   <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Código</th>
+                  <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Opcion</th>
                 </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 <!-- Iterar sobre los productos -->
-                <tr *ngFor="let producto of listaProductos" class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer dark:text-white">
+                <tr *ngFor="let producto of listaProductos"
+                    class="hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer dark:text-white">
                   <td class="py-2 px-4">{{producto.descripcion}}</td>
                   <td class="py-2 px-4 text-green-500 text-center">{{producto.barra}}</td>
+                  <td class="py-2 px-4 text-green-500 text-center">
+                    <button title="Detalles" (click)="agregarBodega(producto)"
+                            class="btn btn-ghost btn-xs bg-transparent rounded-2xl px-4 py-0">
+                      <svg class="w-6 h-6 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
+                        <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
+                      </svg>
+                    </button>
+                  </td>
                 </tr>
                 </tbody>
               </table>
@@ -70,6 +82,98 @@
           </div>
         </div>
       }
+
+      @if (addBodegaModal){
+        <div class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
+
+            <button
+              class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+              (click)="modalListaProductos=true; addBodegaModal=false"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+
+            <h3 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-200">Agregar Bodega</h3>
+
+            <div class="overflow-x-auto">
+
+              <div class="mb-4">
+                <label for="cantidadBodN" class="block text-base font-medium text-gray-900 dark:text-gray-200 mb-2">
+                  Cantidad
+                </label>
+                <input
+                  type="number"
+                  id="cantidadBodN"
+                  placeholder="0"
+                  [(ngModel)]="cantidad"
+                  class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-300"
+                  autocomplete="off"
+                  step="1"
+                  min="0"
+                >
+              </div>
+
+              <div class="col-span-1">
+                <label for="bodegaNew" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Bodegas</label>
+                <select
+                  id="bodegaNew"
+                  name="bodegaSelect"
+                  [(ngModel)]="bodega"
+                  required
+                  class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-300"
+                >
+                  @for (bodega of listaBodegas; track bodega.id){
+                    <option [ngValue]="bodega">{{bodega.nombre}}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-span-1">
+                <label for="proveedores" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Proveedores</label>
+                <select
+                  id="proveedores"
+                  name="proveedor"
+                  [(ngModel)]="proveedor"
+                  required
+                  class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-300"
+                >
+                  @for (proveedor of listaProveedores; track proveedor.id){
+                    <option [ngValue]="proveedor">{{proveedor.nombre}}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="flex gap-4">
+                <button
+                  (click)="addInventario()"
+                  [disabled]="bloqueado"
+                  type="button"
+                  class="inline-flex items-center bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400">
+                  @if (bloqueado){
+                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                      <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                    </svg>
+                    Cargando..
+                  } @else {
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
+                      <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
+                    </svg>
+                    Guardar
+                  }
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      }
+
 
       <!-- Modal para agregar nuevo producto -->
       @if (mostrarModal){
@@ -205,19 +309,32 @@
               </div>
             </div>
             <div class="flex gap-4">
-              <button (click)="cerrarModal()" class="inline-flex items-center bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-400">
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-                </svg>
-                Cancelar
+              <button
+                (click)="cerrarModal()"
+                class="inline-flex items-center bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-400">
+                  <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                  </svg>
+                  Cancelar
               </button>
-              <button (click)="guardarProducto()"
-                      type="button" class="inline-flex items-center bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400">
+              <button
+                (click)="guardarProducto()"
+                [disabled]="bloqueado"
+                type="button"
+                class="inline-flex items-center bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400">
+                @if (bloqueado){
+                  <svg aria-hidden="true" role="status" class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                  </svg>
+                  Cargando..
+                } @else {
                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                   <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
                   <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
                 </svg>
                 Guardar
+                }
               </button>
             </div>
           </div>
@@ -226,6 +343,7 @@
     </div>
   } @else {
     <section>
+
       <span></span>
       <div class="container mx-auto px-4">
         <!-- Flecha de regreso -->
@@ -252,68 +370,63 @@
         </div>
       </section>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table class="w-full text-sm text-left text-gray-700 bg-white rounded-lg shadow-md">
+          <thead class="text-xs text-gray-600 uppercase bg-gray-100">
           <tr>
-            <th scope="col" class="p-4">Id</th>
-            <th scope="col" class="px-6 py-3">Producto</th>
-            <th scope="col" class="px-6 py-3">Barra</th>
-            <th scope="col" class="px-6 py-3">Stock</th>
-            <th scope="col" class="px-6 py-3">Almacen</th>
-            <th scope="col" class="px-6 py-3">Agregar Stock</th>
-            <th scope="col" class="px-6 py-3">Editar Producto</th>
-            <th scope="col" class="px-6 py-3">REducit stock</th>
+            <th scope="col" class="px-4 py-2">Producto</th>
+            <th scope="col" class="px-4 py-2">Barra</th>
+            <th scope="col" class="px-4 py-2">Stock</th>
+            <th scope="col" class="px-4 py-2">Almacen</th>
+            <th scope="col" class="px-2 py-2">Editar</th>
+            <th scope="col" class="px-2 py-2">Agregar</th>
+            <th scope="col" class="px-2 py-2">Reducir</th>
+            <th scope="col" class="px-2 py-2">Eliminar</th>
           </tr>
           </thead>
           <tbody>
-          <!-- listas -->
             @for (producto of listaProductoBod; track $index) {
-              <tr class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" >
-                <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {{producto.id}}
-                </th>
-                <td class="px-4 py-2">
-                  {{producto.producto.descripcion || 'SN'}}
-                </td>
-                <th class="px-4 py-2">
-                  {{producto.producto.barra || 'SN'}}
-                </th>
-                <td class="px-4 py-2">
-                  {{producto.stock || '0'}}
-                </td>
-                <td class="px-4 py-2">
-                  {{producto.bodega.nombre || 'SN'}}
-                </td>
-                <th scope="row" class="px-4 py-2">
-                  <button title="Detalles" (click)="productoEscogido(producto.producto,producto.bodega)"
-                          class="btn btn-ghost btn-xs bg-transparent rounded-2xl px-4 py-0">
-                    <svg class="w-6 h-6 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                      <path fill-rule="evenodd" d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clip-rule="evenodd"/>
-                      <path fill-rule="evenodd" d="M15.026 21.534A9.994 9.994 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2c2.51 0 4.802.924 6.558 2.45l-7.635 7.636L7.707 8.87a1 1 0 0 0-1.414 1.414l3.923 3.923a1 1 0 0 0 1.414 0l8.3-8.3A9.956 9.956 0 0 1 22 12a9.994 9.994 0 0 1-.466 3.026A2.49 2.49 0 0 0 20 14.5h-.5V14a2.5 2.5 0 0 0-5 0v.5H14a2.5 2.5 0 0 0 0 5h.5v.5c0 .578.196 1.11.526 1.534Z" clip-rule="evenodd"/>
+              <tr class="bg-gray-50 hover:bg-gray-100">
+                <td class="px-4 py-2">{{producto.producto.descripcion || 'SN'}}</td>
+                <td class="px-4 py-2">{{producto.producto.barra || 'SN'}}</td>
+                <td class="px-4 py-2">{{producto.stock || '0'}}</td>
+                <td class="px-4 py-2">{{producto.bodega.nombre || 'SN'}}</td>
+                <td class="px-2 py-2 text-center">
+                  <button title="Editar" (click)="editarProducto(producto.producto)"
+                          class="text-blue-600 hover:text-blue-800 focus:outline-none">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z"/>
                     </svg>
                   </button>
-                </th>
-                <th scope="row" class="px-4 py-2">
-                  <button title="Detalles" (click)="editarProducto(producto.producto)"
-                          class="btn btn-ghost btn-xs bg-transparent rounded-2xl px-4 py-0">
-                    <svg class="w-6 h-6 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                      <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
-                      <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+                </td>
+                <td class="px-2 py-2 text-center">
+                  <button title="Agregar" (click)="productoEscogido(producto.producto,producto.bodega); modo='agregar'"
+                          class="text-indigo-600 hover:text-indigo-800 focus:outline-none">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z"/>
                     </svg>
                   </button>
-                </th>
-                <th scope="row" class="px-4 py-2">
-                  <button title="Detalles" (click)="reducirStock(producto.producto)"
-                          class="btn btn-ghost btn-xs bg-transparent rounded-2xl px-4 py-0">
-                    <svg class="w-6 h-6 text-red-700 dark:text-red-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                      <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clip-rule="evenodd"/>
+                </td>
+                <td class="px-2 py-2 text-center">
+                  <button title="Reducir" (click)="productoEscogido(producto.producto,producto.bodega); modo='quitar'"
+                          class="text-orange-500 hover:text-orange-700 focus:outline-none">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z"/>
                     </svg>
                   </button>
-                </th>
+                </td>
+                <td class="px-2 py-2 text-center">
+                  <button title="Eliminar" (click)="eliminarInventario(producto.id)"
+                          class="text-red-600 hover:text-red-800 focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                    </svg>
+                  </button>
+                </td>
               </tr>
             }
           </tbody>
         </table>
+
       </div>
     </section>
   }
@@ -353,9 +466,17 @@
               >
             </div>
 
-            <button (click)="agregarStockProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
-              Agregar Producto
-            </button>
+            @if (modo=='agregar'){
+              <button (click)="agregarStockProducto()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
+                Agregar Producto
+              </button>
+            } @else if (modo=='quitar'){
+              <button (click)="reducirStock()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md transition hover:bg-blue-700">
+                Reducir Stock
+              </button>
+            }
+
+
           </div>
         }
       </div>
@@ -480,6 +601,17 @@
     >
     </app-modal-confirmacion-yn>
   }
+
+  @if (isLoading){
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+      <div role="status" class="flex flex-col items-center">
+        <svg aria-hidden="true" class="inline w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+          <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+        </svg>
+        <span class="text-white mt-2">Cargando...</span>
+      </div>
+    </div>
+  }
+
 </section>
-
-

@@ -15,6 +15,7 @@ import {EntradaInventario} from "../../../core/models/entrada-inventario";
 import {ProductoAlmacen} from "../../../core/models/productoAlmacen";
 import {UsuarioService} from "../../../core/services/usuario.service";
 import {Usuario} from "../../../core/models/ususario";
+import {LoadingService} from "../../../core/services/loading.service";
 
 @Component({
   selector: 'app-productos',
@@ -38,6 +39,7 @@ export default class ProductosComponent implements OnInit{
   toastr=             inject(ToastrService)
   router=              inject(Router)
   fb= inject(FormBuilder)
+  loadingService = inject(LoadingService)
 
   productoSelected?:Producto;
   bodegaSelected?:  Bodega;
@@ -58,8 +60,9 @@ export default class ProductosComponent implements OnInit{
   precio2:       number = 0.00;
   precio3:       number = 0.00;
 
-  nombreOBarra:   string=''
+  nombreOBarra:  string=''
   titulo:        string='Producto no encontrado desea agregarlo'
+  modo:          'agregar' | 'quitar' = 'agregar'
 
   mostrarModal:        boolean = false;
   modalConfirmacion:   boolean = false;
@@ -67,16 +70,24 @@ export default class ProductosComponent implements OnInit{
   modalProductoSelct:  boolean = false;
   ingresaqrProductos:  boolean = false;
   modalEditarProducto: boolean = false;
+  isLoading:           boolean = false;
+  addBodegaModal:      boolean = false;
 
   productoForm!: FormGroup;
 
-  constructor() {}
+  constructor() {this.loadingService.loading$.subscribe(isLoading => {
+     this.isLoading= isLoading
+  })}
 
   ngOnInit(): void {
+    this.loadingService.show();
     this.listarProveedores()
     this.listarProductos()
     this.listarBodegas()
     this.obtenerIdUsario()
+    this.loadingService.hide();
+
+
     this.productoForm = this.fb.group({
       barraP: ['', Validators.required],
       descripcionP: ['', Validators.required],
@@ -109,32 +120,38 @@ export default class ProductosComponent implements OnInit{
   }
 
   agregarStockProducto(){
+    this.loadingService.show()
     if (this.bodegaSelected && this.productoSelected && this.usuario.id){
       this.inventarioService.incrementarStock(this.productoSelected.id,this.bodegaSelected.id,this.cantidad,this.usuario.id).subscribe({
         next: (data) => {
           this.cleanInputs();
           this.toastr.success(data)
           this.cerrarProductoSelct()
+          this.loadingService.hide()
         },
         error: (err) => {
           console.error('Error ',err);
           this.cleanInputs();
+          this.loadingService.hide()
         }
       })
     }
   }
 
-  reducirStock(producto:Producto){
-    if (this.bodegaSelected && producto && this.usuario.id){
-      this.inventarioService.reducirStock(producto.id,this.bodegaSelected.id,this.cantidad,this.usuario.id).subscribe({
+  reducirStock(){
+    this.loadingService.show()
+    if (this.bodegaSelected && this.productoSelected && this.usuario.id){
+      this.inventarioService.reducirStock(this.productoSelected.id,this.bodegaSelected.id,this.cantidad,this.usuario.id).subscribe({
         next: (data) => {
           this.cleanInputs();
           this.toastr.success(data)
           this.cerrarProductoSelct()
+          this.loadingService.hide()
         },
         error: (err) => {
           console.error('Error ',err);
           this.cleanInputs();
+          this.loadingService.hide()
         }
       })
     }
@@ -200,10 +217,6 @@ export default class ProductosComponent implements OnInit{
     })
   }
 
-  eliminarProducto(prod:Producto){
-
-  }
-
   guardarProductoNuevo(){
     if (!this.proveedor || !this.bodega) {
       this.toastr.warning('Seleccione un proveedor y una bodega');
@@ -235,6 +248,7 @@ export default class ProductosComponent implements OnInit{
       producto => {
         this.productoSelected=producto
         this.agregarInventario(producto)
+        this.bloqueado=false
       }
     )
   }
@@ -262,10 +276,22 @@ export default class ProductosComponent implements OnInit{
     )
   }
 
+  eliminarInventario(id: number){
+    this.productoService.eliminarInv(id).subscribe(
+      data => {
+        this.toastr.warning("registro eliminado.")
+        this.cleanInputs()
+        this.gotoListproductos()
+      }
+    )
+  }
+
   listarProductos(){
+    this.loadingService.show()
     this.productoService.listarProductosAlmacen().subscribe(
       data => {
         this.listaProductoBod=data
+        this.loadingService.hide()
       }
     )
   }
@@ -278,8 +304,23 @@ export default class ProductosComponent implements OnInit{
     )
   }
 
+  bloqueado= false;
   guardarProducto(){
+    this.bloqueado=true
     this.guardarProductoNuevo()
+  }
+
+  agregarBodega(producto:Producto){
+    this.addBodegaModal= true;
+    this.modalListaProductos= false;
+    this.productoSelected=producto;
+
+  }
+
+  addInventario(){
+    if (this.productoSelected){
+      this.agregarInventario(this.productoSelected);
+    }
   }
 
   gotoListproductos(){

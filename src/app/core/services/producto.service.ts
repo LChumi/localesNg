@@ -50,4 +50,9 @@ export class ProductoService {
   listarProductosAlmacen():Observable<ProductoAlmacen[]>{
     return this.http.get<ProductoAlmacen[]>(`${this.base_url}productos-almacen`)
   }
+
+  eliminarInv(id:number):Observable<any>{
+    return this.http.delete(`${this.base_url}eliminarInv/${id}`)
+  }
+
 }

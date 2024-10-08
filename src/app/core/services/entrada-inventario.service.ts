@@ -23,7 +23,7 @@ export class EntradaInventarioService {
   }
 
   reducirStock(productoId:number,bodegaId:number,cantidad:number, usuarioId: number):Observable<any>{
-    return this.http.delete<any>(`${this.base_url}reducir-stock/${productoId}/${bodegaId}/${cantidad}`)
+    return this.http.delete<any>(`${this.base_url}reducir-stock/${productoId}/${bodegaId}/${cantidad}/${usuarioId}`, {responseType: 'text' as 'json'})
   }
 
   transferir(productoId:number,bodegaOrigenId:number,bodegaDestinoId:number,cantidad:number):Observable<any>{
