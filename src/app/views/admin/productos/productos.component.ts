@@ -124,6 +124,22 @@ export default class ProductosComponent implements OnInit{
     }
   }
 
+  reducirStock(producto:Producto){
+    if (this.bodegaSelected && producto && this.usuario.id){
+      this.inventarioService.reducirStock(producto.id,this.bodegaSelected.id,this.cantidad,this.usuario.id).subscribe({
+        next: (data) => {
+          this.cleanInputs();
+          this.toastr.success(data)
+          this.cerrarProductoSelct()
+        },
+        error: (err) => {
+          console.error('Error ',err);
+          this.cleanInputs();
+        }
+      })
+    }
+  }
+
   listarProveedores(){
     this.proveedorService.listar().subscribe(
       proveedores => {
@@ -182,6 +198,10 @@ export default class ProductosComponent implements OnInit{
       precioP2: prod.precio2,
       precioP3: prod.precio3
     })
+  }
+
+  eliminarProducto(prod:Producto){
+
   }
 
   guardarProductoNuevo(){
