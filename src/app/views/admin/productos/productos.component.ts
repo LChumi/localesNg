@@ -50,9 +50,11 @@ export default class ProductosComponent implements OnInit{
   listaProductos:   Producto[] =[];
   listaProductoBod: ProductoAlmacen[]=[]
   listaBodegas:     Bodega[]=[]
+  filterProductos:  ProductoAlmacen[]=[]
 
   barraNueva:       string=''
-  descripcionNueva: string =''
+  descripcionNueva: string=''
+  productStr:      string=''
 
   cantidad:      number = 0;
   costo:         number = 0.00;
@@ -290,7 +292,7 @@ export default class ProductosComponent implements OnInit{
     this.loadingService.show()
     this.productoService.listarProductosAlmacen().subscribe(
       data => {
-        this.listaProductoBod=data
+        this.actualizarProductos(data);
         this.loadingService.hide()
       }
     )
@@ -308,6 +310,22 @@ export default class ProductosComponent implements OnInit{
   guardarProducto(){
     this.bloqueado=true
     this.guardarProductoNuevo()
+  }
+
+  actualizarProductos(produc:ProductoAlmacen[]){
+    this.listaProductoBod= produc;
+    this.filterProductos= produc;
+  }
+
+  searchProdcutoBynombre(){
+    if (this.productStr == null || this.productStr === ''){
+      this.listaProductoBod = this.filterProductos
+    } else {
+      const producto = this.productStr.toString().toLowerCase()
+      this.listaProductoBod = this.filterProductos.filter((productos) =>
+        productos.producto.descripcion.toString().toLowerCase().includes(producto)
+      );
+    }
   }
 
   agregarBodega(producto:Producto){
